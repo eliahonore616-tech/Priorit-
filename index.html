@@ -1,0 +1,2846 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Honoré Graphic — Contrôle d'invitation</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b0b0f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Honoré Graphic">
+<meta name="msapplication-TileColor" content="#0b0b0f">
+<meta name="msapplication-TileImage" content="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,600&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&family=Montserrat:wght@400;500;600;700&family=Marcellus&family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#0b0b0f;
+--panel:#15141b;
+--panel-2:#1c1a24;
+--line:#2b2833;
+--gold:#c9a86a;
+--gold-dim:#8f7748;
+--cream:#ede9e0;
+--cream-dim:#9d9a92;
+--green:#5c8a68;
+--green-glow:rgba(92,138,104,0.18);
+--red:#b6484c;
+--red-glow:rgba(182,72,76,0.18);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+background:
+radial-gradient(ellipse at top, #17151d 0%, var(--bg) 55%);
+color:var(--cream);
+font-family:'Manrope',-apple-system,'Segoe UI',Roboto,sans-serif;
+min-height:100vh;
+-webkit-tap-highlight-color:transparent;
+}
+.app{
+max-width:520px;
+margin:0 auto;
+min-height:100vh;
+display:flex;
+flex-direction:column;
+padding-bottom:90px;
+}
+@media (min-width:700px){
+.app{max-width:640px;}
+}
+/* header */
+header{
+padding:26px 22px 16px;
+text-align:center;
+border-bottom:1px solid var(--line);
+position:relative;
+}
+.eyebrow{
+font-family:'IBM Plex Mono','SF Mono','Courier New',monospace;
+font-size:11px;
+letter-spacing:.22em;
+color:var(--gold-dim);
+text-transform:uppercase;
+margin-bottom:6px;
+}
+h1{
+font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+font-weight:700;
+font-size:26px;
+margin:0;
+letter-spacing:.01em;
+}
+h1 em{
+color:var(--gold);
+font-style:italic;
+font-weight:600;
+}
+.header-actions{
+display:flex;
+justify-content:center;
+gap:8px;
+margin-top:14px;
+flex-wrap:wrap;
+}
+.install-btn, .gear-btn{
+background:none;
+border:1px solid var(--gold-dim);
+color:var(--gold);
+font-family:'IBM Plex Mono','SF Mono','Courier New',monospace;
+font-size:10.5px;
+letter-spacing:.06em;
+text-transform:uppercase;
+padding:9px 16px;
+border-radius:20px;
+cursor:pointer;
+}
+main{flex:1;padding:20px 18px 0;}
+/* tabs */
+.tabs{
+display:flex;
+gap:6px;
+position:fixed;
+bottom:0;left:0;right:0;
+max-width:520px;
+margin:0 auto;
+background:linear-gradient(0deg, var(--bg) 70%, transparent);
+padding:16px 14px 20px;
+z-index:20;
+}
+@media (min-width:700px){ .tabs{max-width:640px;} }
+.tab-btn{
+flex:1;
+background:var(--panel);
+border:1px solid var(--line);
+color:var(--cream-dim);
+font-family:'Manrope',-apple-system,'Segoe UI',Roboto,sans-serif;
+font-weight:700;
+font-size:11.5px;
+padding:13px 6px;
+border-radius:14px;
+cursor:pointer;
+letter-spacing:.005em;
+transition:all .18s ease;
+}
+.tab-btn.active{
+background:linear-gradient(135deg, var(--gold) 0%, #a9895a 100%);
+color:#171216;
+border-color:transparent;
+}
+.view{display:none;}
+.view.active{display:block;}
+/* section titles */
+.section-title{
+font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+font-size:19px;
+font-weight:600;
+margin:4px 0 4px;
+}
+.section-sub{
+font-size:12.5px;
+color:var(--cream-dim);
+margin:0 0 18px;
+line-height:1.5;
+}
+/* add guest form */
+.add-form{
+display:flex;
+gap:8px;
+margin-bottom:10px;
+}
+.add-form-contact{
+margin-bottom:22px;
+}
+.add-form input, .add-form select{
+flex:1;
+min-width:0;
+background:var(--panel);
+border:1px solid var(--line);
+color:var(--cream);
+font-family:'Manrope',-apple-system,'Segoe UI',Roboto,sans-serif;
+font-size:14.5px;
+padding:13px 14px;
+border-radius:12px;
+outline:none;
+}
+.add-form-name select{
+flex:0 0 92px;
+-webkit-appearance:none;
+appearance:none;
+}
+.add-form-details #guest-table-input{flex:1.3;}
+.add-form-details #guest-count-input{flex:1;}
+.add-form input:focus, .add-form select:focus{border-color:var(--gold-dim);}
+.add-form button{
+background:var(--gold);
+color:#171216;
+border:none;
+font-weight:800;
+font-size:13px;
+padding:0 18px;
+border-radius:12px;
+cursor:pointer;
+white-space:nowrap;
+}
+.add-form button:disabled{opacity:.4;cursor:default;}
+/* guest list */
+.guest-card{
+display:flex;
+align-items:center;
+gap:12px;
+background:var(--panel);
+border:1px solid var(--line);
+border-radius:14px;
+padding:12px;
+margin-bottom:10px;
+cursor:pointer;
+}
+.guest-qr-thumb{
+width:52px;height:52px;
+background:#fff;
+border-radius:8px;
+display:flex;align-items:center;justify-content:center;
+flex-shrink:0;
+overflow:hidden;
+}
+.guest-qr-thumb img{width:100%;height:100%;}
+.guest-info{flex:1;min-width:0;}
+.guest-name{
+font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+font-weight:600;
+font-size:15.5px;
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.guest-id{
+font-family:'IBM Plex Mono','SF Mono','Courier New',monospace;
+font-size:10.5px;
+color:var(--cream-dim);
+margin-top:2px;
+}
+.guest-meta{
+font-size:11.5px;
+color:var(--gold);
+margin-top:3px;
+}
+.guest-status{
+font-family:'IBM Plex Mono','SF Mono','Courier New',monospace;
+font-size:10px;
+letter-spacing:.06em;
+padding:5px 9px;
+border-radius:20px;
+flex-shrink:0;
+}
+.status-pending{background:rgba(201,168,106,0.12);color:var(--gold);}
+.status-in{background:var(--green-glow);color:var(--green);}
+.status-partial{background:rgba(61,90,138,0.16);color:#6f93d6;}
+.del-btn{
+background:none;border:none;color:var(--cream-dim);
+font-size:18px;padding:4px 6px;cursor:pointer;flex-shrink:0;
+}
+.empty-state{
+text-align:center;
+padding:50px 20px;
+color:var(--cream-dim);
+font-size:13.5px;
+border:1px dashed var(--line);
+border-radius:16px;
+}
+.import-doc-btn{
+display:block;
+width:100%;
+background:var(--panel-2);
+border:1px dashed var(--gold-dim);
+color:var(--gold);
+font-weight:700;
+font-size:13px;
+padding:13px;
+border-radius:12px;
+cursor:pointer;
+margin-bottom:18px;
+}
+.import-row{
+display:flex;
+align-items:center;
+gap:8px;
+padding:7px 4px;
+border-bottom:1px solid var(--line);
+}
+.import-row:last-child{border-bottom:none;}
+.import-row input[type="checkbox"]{
+flex-shrink:0;
+width:18px;height:18px;
+accent-color:var(--gold);
+}
+.import-row input[type="text"]{
+flex:1;
+min-width:0;
+background:var(--panel);
+border:1px solid var(--line);
+color:var(--cream);
+font-size:13.5px;
+padding:9px 10px;
+border-radius:8px;
+outline:none;
+}
+.import-card-row{
+display:block;
+padding:10px 4px;
+}
+.import-card-row-top{
+display:flex;
+gap:10px;
+align-items:flex-start;
+}
+.import-thumb{
+flex-shrink:0;
+width:56px;height:56px;
+border-radius:10px;
+object-fit:cover;
+background:var(--panel-2);
+border:1px solid var(--line);
+}
+.import-thumb-clickable{
+cursor:pointer;
+}
+.import-thumb-clickable:active{
+opacity:.75;
+}
+.import-thumb-file{
+display:flex;align-items:center;justify-content:center;
+font-size:10.5px;font-weight:700;
+color:var(--gold);
+font-family:'IBM Plex Mono','SF Mono','Courier New',monospace;
+}
+.import-card-row-fields{
+flex:1;
+min-width:0;
+display:flex;
+flex-direction:column;
+gap:6px;
+}
+.import-card-row-line{
+display:flex;
+gap:6px;
+align-items:center;
+}
+.import-select-civility{
+flex:0 0 68px;
+background:var(--panel);
+color:var(--cream);
+border:1px solid var(--line);
+border-radius:8px;
+padding:8px 2px;
+font-size:12px;
+}
+.import-input-name{
+flex:1;
+min-width:0;
+background:var(--panel);
+border:1px solid var(--line);
+color:var(--cream);
+font-size:13px;
+padding:8px 9px;
+border-radius:8px;
+outline:none;
+}
+.import-input-table{
+flex:1;
+min-width:0;
+background:var(--panel);
+border:1px solid var(--line);
+color:var(--cream);
+font-size:13px;
+padding:8px 9px;
+border-radius:8px;
+outline:none;
+}
+.import-check-label{
+flex-shrink:0;
+display:flex;
+align-items:center;
+gap:5px;
+font-size:11.5px;
+color:var(--cream-dim);
+white-space:nowrap;
+}
+.import-check-label input[type="checkbox"]{
+width:17px;height:17px;
+accent-color:var(--green);
+}
+.import-row-warning{
+font-size:10.5px;
+color:var(--red);
+line-height:1.4;
+}
+.import-row-incomplete .import-input-name,
+.import-row-incomplete .import-input-table{
+border-color:var(--red);
+}
+.info-banner{
+font-size:11px;
+color:var(--cream-dim);
+background:var(--panel);
+border:1px solid var(--line);
+border-radius:12px;
+padding:11px 13px;
+margin-bottom:18px;
+line-height:1.5;
+}
+/* generic modal shell */
+.modal-overlay{
+display:none;
+position:fixed;inset:0;
+background:rgba(5,5,7,0.86);
+z-index:50;
+align-items:center;justify-content:center;
+padding:24px;
+overflow-y:auto;
+}
+.modal-overlay.active{display:flex;}
+.modal-close{
+position:absolute;top:14px;right:16px;
+background:none;border:none;color:var(--cream-dim);
+font-size:20px;cursor:pointer;
+}
+/* QR invite card — light "paper invitation" look, recolored per theme via .theme-* classes */
+.invite-card{
+--paper:#fffdf8;
+--paper-2:#fbf3e4;
+--ink:#2b2418;
+--accent:#b8935a;
+--accent-soft:#e9d9bd;
+background:linear-gradient(165deg, var(--paper) 0%, var(--paper-2) 100%);
+border:1px solid var(--accent-soft);
+border-radius:20px;
+padding:34px 26px 26px;
+width:100%;max-width:340px;
+text-align:center;
+position:relative;
+margin:auto;
+box-shadow:0 18px 40px rgba(0,0,0,0.35);
+overflow:hidden;
+}
+.invite-card::before, .invite-card::after{
+content:'';
+position:absolute;
+width:96px;height:96px;
+background-repeat:no-repeat;
+background-size:contain;
+opacity:.7;
+pointer-events:none;
+background-image:
+radial-gradient(circle at 30% 30%, var(--accent) 0 9px, transparent 10px),
+radial-gradient(circle at 48% 18%, var(--accent) 0 9px, transparent 10px),
+radial-gradient(circle at 62% 34%, var(--accent) 0 9px, transparent 10px),
+radial-gradient(circle at 42% 34%, var(--accent-soft) 0 7px, transparent 8px),
+radial-gradient(ellipse 26px 10px at 15% 60%, var(--accent-soft) 0 100%, transparent 100%),
+radial-gradient(ellipse 26px 10px at 80% 78%, var(--accent-soft) 0 100%, transparent 100%);
+}
+.invite-card::before{ top:-18px; left:-18px; }
+.invite-card::after{ bottom:-18px; right:-18px; transform:rotate(180deg); }
+/* ---- variantes de style de composition (s'ajoutent au thème de couleur) ---- */
+/* MINIMALISTE & ÉPURÉ : aucune fioriture, juste un mince cadre simple, lignes fines */
+.invite-card.style-minimaliste::before, .invite-card.style-minimaliste::after{ display:none; }
+.invite-card.style-minimaliste{
+border:1px solid var(--accent);
+border-radius:2px;
+box-shadow:0 10px 24px rgba(0,0,0,0.22);
+background:var(--paper);
+}
+.invite-card.style-minimaliste .invite-qr-box{ border-radius:0; box-shadow:none; }
+.invite-card.style-minimaliste .eyebrow{ letter-spacing:.3em; }
+.invite-card.style-minimaliste .invite-table{ border-radius:2px; }
+/* GÉOMÉTRIQUE & MODERNE : angles nets, lignes croisées, pas de courbes */
+.invite-card.style-geometrique::before, .invite-card.style-geometrique::after{ display:none; }
+.invite-card.style-geometrique{
+border-radius:0;
+border:2px solid var(--accent);
+box-shadow:0 18px 40px rgba(0,0,0,0.35);
+background:
+linear-gradient(135deg, var(--accent) 0 3px, transparent 3px) top left / 26px 26px no-repeat,
+linear-gradient(-45deg, var(--accent) 0 3px, transparent 3px) top right / 26px 26px no-repeat,
+linear-gradient(-135deg, var(--accent) 0 3px, transparent 3px) bottom right / 26px 26px no-repeat,
+linear-gradient(45deg, var(--accent) 0 3px, transparent 3px) bottom left / 26px 26px no-repeat,
+linear-gradient(165deg, var(--paper) 0%, var(--paper-2) 100%);
+}
+.invite-card.style-geometrique .invite-qr-box{ border-radius:0; }
+.invite-card.style-geometrique .invite-table{ border-radius:0; transform:rotate(-1deg); }
+/* BOTANIQUE & AQUARELLE : larges taches organiques, plus de mouvement, effet peint */
+.invite-card.style-botanique::before, .invite-card.style-botanique::after{
+width:170px;height:170px;
+opacity:.55;
+filter:blur(0.5px);
+background-image:
+radial-gradient(circle at 30% 30%, var(--accent) 0 18px, transparent 19px),
+radial-gradient(circle at 55% 15%, var(--accent-soft) 0 24px, transparent 25px),
+radial-gradient(circle at 68% 42%, var(--accent) 0 14px, transparent 15px),
+radial-gradient(circle at 40% 48%, var(--accent-soft) 0 16px, transparent 17px),
+radial-gradient(circle at 20% 55%, var(--accent-soft) 0 10px, transparent 11px),
+radial-gradient(ellipse 46px 18px at 12% 68%, var(--accent-soft) 0 100%, transparent 100%),
+radial-gradient(ellipse 46px 18px at 82% 85%, var(--accent-soft) 0 100%, transparent 100%);
+}
+.invite-card.style-botanique{ border:none; box-shadow:0 18px 40px rgba(0,0,0,0.3); }
+.invite-card.style-botanique .invite-name{ font-style:italic; }
+.invite-card.style-botanique .invite-table{ border-radius:30px 4px 30px 4px; }
+/* LUXURY & LUXE : cadre métallisé double-liseré, brillance dorée/argentée */
+.invite-card.style-luxe{
+border:1px solid var(--accent);
+box-shadow:
+0 18px 40px rgba(0,0,0,0.35),
+inset 0 0 0 4px var(--paper),
+inset 0 0 0 5px var(--accent),
+inset 0 0 0 9px var(--paper),
+inset 0 0 0 10px var(--accent-soft);
+padding:44px 30px 32px;
+}
+.invite-card.style-luxe::before, .invite-card.style-luxe::after{ opacity:.9; }
+.invite-card.style-luxe .invite-name{ text-shadow:0 0 14px var(--accent-soft); letter-spacing:.02em; }
+.invite-card.style-luxe .eyebrow{ letter-spacing:.35em; }
+.invite-card.style-luxe .invite-table{ background:var(--accent); color:var(--paper); border-color:var(--accent); }
+/* FLORAL (original, renforcé) : bouquets généreux dans les 2 coins */
+.invite-card.style-floral::before, .invite-card.style-floral::after{ width:120px; height:120px; opacity:.75; }
+/* CADRE ORNEMENTAL (or / argent selon le thème choisi) : double liseré fin + coins sertis */
+.invite-card.style-cadre{
+border:2px double var(--accent);
+box-shadow:0 18px 40px rgba(0,0,0,0.35), inset 0 0 0 3px var(--paper), inset 0 0 0 4px var(--accent-soft);
+padding:40px 28px 30px;
+}
+.invite-card.style-cadre::before, .invite-card.style-cadre::after{
+width:70px;height:70px;
+opacity:.9;
+background-image:
+radial-gradient(circle at 50% 50%, var(--accent) 0 4px, transparent 5px),
+conic-gradient(from 0deg, var(--accent) 0 8%, transparent 8% 17%, var(--accent) 17% 25%, transparent 25% 34%, var(--accent) 34% 42%, transparent 42% 50%, var(--accent) 50% 58%, transparent 58% 67%, var(--accent) 67% 75%, transparent 75% 84%, var(--accent) 84% 92%, transparent 92%);
+border-radius:50%;
+}
+.invite-card.style-cadre .invite-qr-box{ border:2px solid var(--accent); }
+.invite-card.style-cadre .invite-table{ border-radius:2px; letter-spacing:.1em; }
+/* CADRE FLORAL COMPLET : guirlande florale sur tout le pourtour, pas seulement les coins */
+.invite-card.style-cadre-floral{
+border:none;
+padding:46px 30px 34px;
+box-shadow:0 18px 40px rgba(0,0,0,0.32);
+background:
+linear-gradient(var(--paper), var(--paper)) padding-box,
+repeating-linear-gradient(90deg, var(--accent) 0 10px, transparent 10px 22px, var(--accent-soft) 22px 30px, transparent 30px 40px) border-box;
+border:10px solid transparent;
+}
+.invite-card.style-cadre-floral::before, .invite-card.style-cadre-floral::after{
+width:130px;height:130px;
+opacity:.8;
+}
+.invite-card.style-cadre-floral .invite-qr-box{ border:1px solid var(--accent); }
+.invite-card .eyebrow{margin-bottom:6px;color:var(--accent);position:relative;z-index:1;}
+/* ---- polices de la carte ---- */
+.font-playfair .invite-name, .font-playfair .invite-message{ font-family:'Playfair Display',Georgia,'Times New Roman',serif; }
+.font-cormorant .invite-name, .font-cormorant .invite-message{ font-family:'Cormorant Garamond',Georgia,serif; }
+.font-greatvibes .invite-name{ font-family:'Great Vibes',cursive; font-size:32px; font-style:normal; }
+.font-greatvibes .invite-message{ font-family:'Cormorant Garamond',Georgia,serif; }
+.font-marcellus .invite-name, .font-marcellus .invite-message{ font-family:'Marcellus',Georgia,serif; font-style:normal; }
+.font-cinzel .invite-name{ font-family:'Cinzel',Georgia,serif; font-style:normal; letter-spacing:.03em; }
+.font-cinzel .invite-message{ font-family:'Cormorant Garamond',Georgia,serif; }
+.font-montserrat .invite-name{ font-family:'Montserrat',Arial,sans-serif; font-style:normal; font-weight:700; }
+.font-montserrat .invite-message{ font-family:'Montserrat',Arial,sans-serif; font-style:normal; }
+.invite-photo{
+width:84px;height:84px;
+border-radius:50%;
+object-fit:cover;
+border:3px solid var(--accent);
+margin:0 auto 14px;
+display:block;
+position:relative;z-index:1;
+box-shadow:0 6px 16px rgba(0,0,0,0.25);
+}
+.invite-message{
+font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+font-style:italic;
+font-size:13.5px;
+color:var(--ink);
+opacity:.85;
+line-height:1.5;
+margin:6px 0 16px;
+white-space:pre-line;
+position:relative;z-index:1;
+}
+.invite-name{
+font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+font-style:italic;
+font-size:24px;
+font-weight:600;
+color:var(--ink);
+margin:0 0 10px;
+position:relative;z-index:1;
+}
+.invite-table{
+display:inline-block;
+font-family:'IBM Plex Mono','SF Mono','Courier New',monospace;
+font-size:12.5px;
+letter-spacing:.06em;
+font-weight:600;
+color:var(--ink);
+background:var(--accent-soft);
+border:1px solid var(--accent);
+border-radius:20px;
+padding:5px 16px;
+margin-bottom:20px;
+position:relative;z-index:1;
+}
+.invite-qr-box{
+background:#fff;
+padding:14px;
+border-radius:14px;
+display:inline-block;
+border:1px solid var(--accent-soft);
+position:relative;z-index:1;
+}
+.invite-venue{
+font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+font-weight:600;
+font-size:14.5px;
+color:var(--ink);
+margin-top:18px;
+position:relative;z-index:1;
+}
+.invite-contacts{
+font-family:'IBM Plex Mono','SF Mono','Courier New',monospace;
+font-size:11px;
+letter-spacing:.03em;
+color:var(--accent);
+margin-top:6px;
+position:relative;z-index:1;
+}
+.invite-hint{
+font-size:11.5px;
+color:var(--ink);
+opacity:.55;
+margin-top:16px;
+line-height:1.5;
+position:relative;z-index:1;
+}
+.invite-share-btn{
+display:block;
+width:100%;
+margin-top:20px;
+background:var(--gold);
+color:#171216;
+border:none;
+font-weight:800;
+font-size:13.5px;
+padding:14px;
+border-radius:12px;
+cursor:pointer;
+}
+.invite-share-btn:active{opacity:.85;}
+.invite-save-btn{
+display:block;
+width:100%;
+margin-top:10px;
+background:var(--panel-2);
+color:var(--gold);
+border:1px solid var(--gold-dim);
+font-weight:700;
+font-size:13.5px;
+padding:13px;
+border-radius:12px;
+cursor:pointer;
+}
+.invite-print-btn{
+display:block;
+width:100%;
+margin-top:10px;
+background:none;
+color:var(--cream-dim);
+border:1px solid var(--line);
+font-weight:700;
+font-size:13.5px;
+padding:13px;
+border-radius:12px;
+cursor:pointer;
+}
+/* couleur/thème floral choisi par le propriétaire pour toutes les cartes */
+.theme-or{ --accent:#b8935a; --accent-soft:#e9d9bd; --paper:#fffdf8; --paper-2:#fbf3e4; }
+.theme-rose{ --accent:#c46b7a; --accent-soft:#f2d3d9; --paper:#fffaf9; --paper-2:#fdeef0; }
+.theme-emeraude{ --accent:#3f7a5e; --accent-soft:#cfe6da; --paper:#f9fdfa; --paper-2:#eef7f1; }
+.theme-bleu{ --accent:#3d5a8a; --accent-soft:#d3ddef; --paper:#f9fbfd; --paper-2:#eef2f9; }
+.theme-corail{ --accent:#d97b52; --accent-soft:#f6ddc9; --paper:#fffbf7; --paper-2:#fdf1e6; }
+.theme-lavande{ --accent:#7e6aa8; --accent-soft:#e1d9ef; --paper:#fcfbfe; --paper-2:#f4f0fa; }
+.theme-argent{ --accent:#8b93a0; --accent-soft:#dde1e6; --paper:#fbfcfd; --paper-2:#eef0f3; }
+@media print{
+body *{ visibility:hidden; }
+#qr-modal.active, #qr-modal.active *{ visibility:visible; }
+#qr-modal{
+position:absolute; inset:0;
+background:#ffffff !important;
+display:flex; align-items:center; justify-content:center;
+}
+.invite-card{ box-shadow:none; }
+.modal-close, .invite-share-btn, .invite-save-btn, .invite-print-btn{
+display:none !important;
+}
+}
+/* generic settings-style modal card */
+.panel-card{
+background:linear-gradient(160deg, #1a1822 0%, #100f14 100%);
+border:1px solid var(--line);
+border-radius:20px;
+padding:26px 22px;
+width:100%;max-width:400px;
+position:relative;
+margin:auto;
+}
+.panel-title{
+font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+font-size:19px;
+font-weight:600;
+margin:0 0 18px;
+}
+.panel-block{
+border-top:1px solid var(--line);
+padding-top:16px;
+margin-top:16px;
+}
+.panel-block:first-of-type{border-top:none;margin-top:0;padding-top:0;}
+.panel-label{
+font-size:11.5px;
+color:var(--cream-dim);
+margin-bottom:8px;
+letter-spacing:.02em;
+}
+.panel-block input[type="text"],
+.panel-block input[type="password"],
+.panel-block input[type="tel"],
+.panel-block input[type="datetime-local"],
+.panel-block select,
+.panel-block textarea{
+width:100%;
+background:var(--panel);
+border:1px solid var(--line);
+color:var(--cream);
+font-family:'IBM Plex Mono','SF Mono','Courier New',monospace;
+font-size:14px;
+padding:12px 13px;
+border-radius:10px;
+outline:none;
+margin-bottom:8px;
+}
+.panel-block textarea{ resize:vertical; min-height:60px; font-family:'Manrope',-apple-system,'Segoe UI',Roboto,sans-serif; }
+.panel-block input:focus, .panel-block select:focus, .panel-block textarea:focus{border-color:var(--gold-dim);}
+.panel-btn{
+width:100%;
+background:var(--gold);
+color:#171216;
+border:none;
+font-weight:800;
+font-size:13px;
+padding:12px;
+border-radius:10px;
+cursor:pointer;
+margin-top:4px;
+}
+.panel-btn.secondary{
+background:var(--panel-2);
+color:var(--gold);
+border:1px solid var(--gold-dim);
+}
+.panel-btn.danger{
+background:var(--panel-2);
+color:var(--red);
+border:1px solid var(--red);
+}
+.panel-note{
+font-size:11px;
+color:var(--cream-dim);
+line-height:1.5;
+margin-top:6px;
+}
+.panel-error{
+font-size:11.5px;
+color:var(--red);
+margin:4px 0 0;
+min-height:14px;
+}
+.panel-success{
+font-size:11.5px;
+color:var(--green);
+margin:4px 0 0;
+min-height:14px;
+}
+/* scanner view */
+.scan-frame{
+position:relative;
+width:100%;
+aspect-ratio:3/4;
+background:#000;
+border-radius:20px;
+overflow:hidden;
+border:1px solid var(--line);
+}
+.scan-frame video, .scan-frame img{
+width:100%;height:100%;object-fit:cover;
+}
+#html5qr-region{
+position:absolute;inset:0;
+width:100%;height:100%;
+}
+#html5qr-region video{
+width:100%!important;height:100%!important;object-fit:cover;
+}
+/* hide the library's default scan-region border overlay so our own gold guides show instead */
+#html5qr-region > div{ border:none!important; box-shadow:none!important; }
+.scan-placeholder{
+position:absolute;inset:0;
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+gap:14px;
+color:var(--cream-dim);
+text-align:center;
+padding:20px;
+}
+.scan-guides{
+position:absolute;inset:14%;
+border:1.5px solid var(--gold);
+border-radius:16px;
+pointer-events:none;
+opacity:.55;
+}
+.scan-line{
+position:absolute;left:14%;right:14%;top:14%;
+height:2px;
+background:linear-gradient(90deg, transparent, var(--gold), transparent);
+box-shadow:0 0 10px 1px var(--gold);
+animation:scanmove 2.2s ease-in-out infinite;
+pointer-events:none;
+}
+@keyframes scanmove{
+0%{top:14%;} 50%{top:82%;} 100%{top:14%;}
+}
+@media (prefers-reduced-motion: reduce){
+.scan-line{animation:none;top:48%;}
+}
+.cam-btn{
+display:block;width:100%;
+margin-top:16px;
+background:var(--panel-2);
+border:1px solid var(--gold-dim);
+color:var(--gold);
+font-weight:700;font-size:13.5px;
+padding:14px;border-radius:12px;
+cursor:pointer;
+}
+/* result stamp overlay */
+.result-overlay{
+display:none;
+position:fixed;inset:0;
+background:rgba(5,5,7,0.92);
+z-index:60;
+align-items:center;justify-content:center;
+padding:26px;
+}
+.result-overlay.active{display:flex;}
+.stamp-card{
+text-align:center;
+animation:stampin .35s cubic-bezier(.2,1.4,.4,1);
+}
+@keyframes stampin{
+0%{transform:scale(1.4) rotate(-8deg);opacity:0;}
+100%{transform:scale(1) rotate(-6deg);opacity:1;}
+}
+.stamp-ring{
+width:190px;height:190px;
+border-radius:50%;
+border:3px solid var(--green);
+display:flex;align-items:center;justify-content:center;
+margin:0 auto 22px;
+transform:rotate(-6deg);
+}
+.stamp-ring.denied{border-color:var(--red);}
+.stamp-text{
+font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+font-weight:700;
+font-size:17px;
+line-height:1.25;
+color:var(--green);
+text-transform:uppercase;
+letter-spacing:.03em;
+}
+.stamp-ring.denied .stamp-text{color:var(--red);}
+.result-name{
+font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+font-style:italic;
+font-size:24px;
+margin:0 0 6px;
+color:var(--cream);
+}
+.result-meta{
+font-family:'IBM Plex Mono','SF Mono','Courier New',monospace;
+font-size:13px;
+letter-spacing:.03em;
+color:var(--gold);
+margin-bottom:10px;
+}
+.result-detail{
+font-size:12.5px;
+color:var(--cream-dim);
+margin-bottom:26px;
+font-family:'IBM Plex Mono','SF Mono','Courier New',monospace;
+}
+.result-close{
+background:var(--gold);
+color:#171216;
+border:none;
+font-weight:800;
+font-size:13.5px;
+padding:14px 30px;
+border-radius:12px;
+cursor:pointer;
+}
+/* database view */
+.db-stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px;
+margin-bottom:18px;
+}
+.db-stat{
+background:var(--panel);
+border:1px solid var(--line);
+border-radius:14px;
+padding:12px 8px;
+text-align:center;
+}
+.db-stat-num{
+font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+font-size:22px;
+font-weight:700;
+color:var(--gold);
+}
+.db-stat-label{
+font-size:9.5px;
+color:var(--cream-dim);
+text-transform:uppercase;
+letter-spacing:.05em;
+margin-top:2px;
+}
+.db-search{
+width:100%;
+background:var(--panel);
+border:1px solid var(--line);
+color:var(--cream);
+font-family:'Manrope',-apple-system,'Segoe UI',Roboto,sans-serif;
+font-size:14px;
+padding:12px 14px;
+border-radius:12px;
+outline:none;
+margin-bottom:18px;
+}
+.db-search:focus{border-color:var(--gold-dim);}
+.db-group{margin-bottom:18px;}
+.db-group-title{
+font-family:'IBM Plex Mono','SF Mono','Courier New',monospace;
+font-size:11px;
+letter-spacing:.08em;
+text-transform:uppercase;
+color:var(--gold-dim);
+margin-bottom:8px;
+padding-left:2px;
+}
+.db-row{
+display:flex;
+align-items:center;
+gap:10px;
+background:var(--panel);
+border:1px solid var(--line);
+border-radius:12px;
+padding:11px 12px;
+margin-bottom:7px;
+}
+.db-row-info{flex:1;min-width:0;}
+.db-row-name{
+font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+font-weight:600;
+font-size:14.5px;
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.db-row-sub{
+font-family:'IBM Plex Mono','SF Mono','Courier New',monospace;
+font-size:10.5px;
+color:var(--cream-dim);
+margin-top:2px;
+}
+.db-actions{
+display:flex;
+flex-direction:column;
+gap:9px;
+margin-top:8px;
+padding-top:18px;
+border-top:1px solid var(--line);
+}
+.db-actions-row{display:flex;gap:9px;}
+.db-actions-row .panel-btn{margin-top:0;}
+.file-input-hidden{display:none;}
+/* lock overlay */
+.lock-overlay{
+position:fixed;inset:0;
+background:radial-gradient(ellipse at top, #17151d 0%, var(--bg) 55%);
+z-index:200;
+display:flex;
+align-items:center;justify-content:center;
+padding:26px;
+}
+.lock-overlay.hidden{display:none;}
+.lock-card{
+width:100%;max-width:340px;
+text-align:center;
+}
+.lock-ring{
+width:64px;height:64px;
+border:1.5px solid var(--gold);
+border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+margin:0 auto 20px;
+font-size:24px;
+color:var(--gold);
+}
+.lock-title{
+font-family:'Playfair Display',Georgia,'Times New Roman',serif;
+font-size:21px;
+font-weight:600;
+margin:0 0 8px;
+}
+.lock-sub{
+font-size:12.5px;
+color:var(--cream-dim);
+line-height:1.5;
+margin:0 0 22px;
+}
+.lock-ended-banner{
+font-size:11.5px;
+color:var(--red);
+background:var(--red-glow);
+border:1px solid var(--red);
+border-radius:10px;
+padding:10px 12px;
+margin-bottom:18px;
+line-height:1.5;
+}
+.lock-pin-input{
+width:100%;
+background:var(--panel);
+border:1px solid var(--line);
+color:var(--cream);
+font-family:'IBM Plex Mono','SF Mono','Courier New',monospace;
+font-size:22px;
+letter-spacing:.5em;
+text-align:center;
+padding:16px 10px 16px 16px;
+border-radius:12px;
+outline:none;
+margin-bottom:12px;
+}
+.lock-pin-input:focus{border-color:var(--gold-dim);}
+.lock-btn{
+width:100%;
+background:var(--gold);
+color:#171216;
+border:none;
+font-weight:800;
+font-size:14px;
+padding:15px;
+border-radius:12px;
+cursor:pointer;
+}
+.lock-error{
+font-size:12px;
+color:var(--red);
+margin-top:12px;
+min-height:14px;
+}
+.lock-setup-note{
+font-size:11px;
+color:var(--cream-dim);
+margin-top:16px;
+line-height:1.5;
+}
+</style>
+</head>
+<body>
+<!-- REVOKED SCREEN (blocage à distance par le propriétaire) -->
+<div class="lock-overlay hidden" id="revoked-overlay" style="z-index:400;">
+<div class="lock-card">
+<div class="lock-ring" style="border-color:var(--red);color:var(--red);">⛔</div>
+<div class="lock-title">Accès révoqué</div>
+<p class="lock-sub" id="revoked-message">Le propriétaire a désactivé l'accès à cette application sur cet appareil.</p>
+</div>
+</div>
+<!-- LOCK SCREEN -->
+<div class="lock-overlay" id="lock-overlay">
+<div class="lock-card">
+<div class="lock-ring">◈</div>
+<!-- owner authorization gate — required once per new device, before any PIN can be created -->
+<div id="lock-owner-code-view" style="display:none;">
+<div class="lock-title">Autorisation du propriétaire</div>
+<p class="lock-sub" id="owner-code-sub">Nouvel appareil détecté. Seul le propriétaire de l'application peut l'activer ici. Entre le code d'autorisation.</p>
+<input class="lock-pin-input" id="owner-code-input" type="password" placeholder="Code du propriétaire" style="letter-spacing:.05em;font-size:16px;">
+<button class="lock-btn" id="owner-code-btn">Valider</button>
+<div class="lock-error" id="owner-code-error"></div>
+<p class="lock-setup-note">Ce code n'est connu que du propriétaire de l'application. Une fois validé, tu pourras créer un code d'accès quotidien pour cet appareil.</p>
+</div>
+<!-- first-run setup -->
+<div id="lock-setup-view" style="display:none;">
+<div class="lock-title">Créer un code d'accès</div>
+<p class="lock-sub">Protège la liste des invités : ce code sera demandé à chaque ouverture de l'application.</p>
+<input class="lock-pin-input" id="setup-pin-1" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••">
+<input class="lock-pin-input" id="setup-pin-2" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Confirme le code">
+<button class="lock-btn" id="setup-pin-btn">Créer le code</button>
+<div class="lock-error" id="setup-pin-error"></div>
+<p class="lock-setup-note">Choisis 4 à 6 chiffres et retiens-le bien : il n'y a pas de récupération automatique si tu l'oublies.</p>
+</div>
+<!-- returning entry -->
+<div id="lock-enter-view" style="display:none;">
+<div class="lock-title">Code d'accès</div>
+<p class="lock-sub" id="lock-enter-sub">Entre ton code pour accéder à l'application.</p>
+<div class="lock-ended-banner" id="lock-ended-banner" style="display:none;"></div>
+<input class="lock-pin-input" id="enter-pin-input" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="••••">
+<button class="lock-btn" id="enter-pin-btn">Déverrouiller</button>
+<div class="lock-error" id="enter-pin-error"></div>
+</div>
+</div>
+</div>
+<div class="app">
+<header>
+<div class="eyebrow">Liste d'accès privée</div>
+<h1>Honoré <em>Graphic</em></h1>
+<div class="header-actions">
+<button class="install-btn" id="install-btn">Installer l'application</button>
+<button class="gear-btn" id="gear-btn">⚙ Sécurité</button>
+</div>
+</header>
+<main>
+<!-- INVITATIONS VIEW -->
+<section class="view active" id="view-invites">
+<div class="section-title">Invités</div>
+<p class="section-sub">Ajoute chaque invité avec sa table, le nombre de personnes et son contact. Ces informations restent internes : la carte envoyée à l'invité n'affiche que son nom au-dessus du QR code, mais tout s'affichera à l'application dès le scan.</p>
+<div class="info-banner" id="shared-banner">
+Les données sont enregistrées directement sur cet appareil et restent disponibles tant que tu ne les supprimes pas toi-même — même après fermeture de l'application. Utilise l'onglet « Base de données » pour exporter une sauvegarde ou synchroniser un autre téléphone.
+</div>
+<div class="add-form add-form-name">
+<select id="guest-civility-input">
+<option value="M.">M.</option>
+<option value="Mme">Mme</option>
+<option value="Mlle">Mlle</option>
+<option value="Couple">Couple</option>
+</select>
+<input type="text" id="guest-name-input" placeholder="Nom de l'invité" maxlength="60">
+</div>
+<div class="add-form add-form-details">
+<input type="text" id="guest-table-input" placeholder="Table (ex : 5)" maxlength="20">
+<input type="number" id="guest-count-input" placeholder="Nb. personnes" min="1" max="50">
+</div>
+<div class="add-form add-form-contact">
+<input type="tel" id="guest-contact-input" placeholder="Contact (téléphone)" maxlength="30">
+<button id="add-guest-btn">Ajouter</button>
+</div>
+<button class="import-doc-btn" id="import-doc-btn">📄 Importer une liste (Word / PDF)</button>
+<input type="file" id="import-doc-file" accept=".docx,.pdf" style="display:none;">
+<p class="panel-note" id="import-doc-status" style="display:none;"></p>
+<button class="import-doc-btn" id="import-cards-btn">🖼️ Importer des invitations déjà conçues (JPG / PNG / PDF / Word)</button>
+<input type="file" id="import-cards-file" accept=".docx,.pdf,.jpg,.jpeg,.png" multiple style="display:none;">
+<p class="panel-note" id="import-cards-status" style="display:none;"></p>
+<div id="guest-list"></div>
+</section>
+<!-- SCANNER VIEW -->
+<section class="view" id="view-scan">
+<div class="section-title">Contrôle à l'entrée</div>
+<p class="section-sub">Scanne le code QR présenté par l'invité. L'identité s'affiche automatiquement, avec une alerte si le code a déjà été utilisé ou n'est pas reconnu.</p>
+<div class="scan-frame" id="scan-frame">
+<div class="scan-placeholder" id="scan-placeholder">
+<div style="font-size:34px;">◎</div>
+<div>Caméra désactivée</div>
+</div>
+<div id="html5qr-region"></div>
+<div class="scan-guides" id="scan-guides" style="display:none;"></div>
+<div class="scan-line" id="scan-line" style="display:none;"></div>
+</div>
+<button class="cam-btn" id="cam-toggle">Activer la caméra</button>
+</section>
+<!-- DATABASE VIEW -->
+<section class="view" id="view-db">
+<div class="section-title">Base de données</div>
+<p class="section-sub">Vue d'ensemble de tous les invités enregistrés, groupés par table. Ces données restent sur cet appareil jusqu'à ce que tu les supprimes toi-même.</p>
+<div class="db-stats">
+<div class="db-stat">
+<div class="db-stat-num" id="db-stat-invites">0</div>
+<div class="db-stat-label">Invitations</div>
+</div>
+<div class="db-stat">
+<div class="db-stat-num" id="db-stat-people">0</div>
+<div class="db-stat-label">Personnes attendues</div>
+</div>
+<div class="db-stat">
+<div class="db-stat-num" id="db-stat-in">0</div>
+<div class="db-stat-label">Arrivées</div>
+</div>
+</div>
+<input type="text" class="db-search" id="db-search" placeholder="Rechercher un nom, une table, un contact...">
+<div id="db-groups"></div>
+<div class="db-actions">
+<div class="panel-label">Sauvegarde &amp; synchronisation</div>
+<div class="db-actions-row">
+<button class="panel-btn secondary" id="db-export-btn">Exporter (.json)</button>
+<button class="panel-btn secondary" id="db-import-btn">Importer</button>
+</div>
+<input type="file" id="db-import-file" class="file-input-hidden" accept="application/json">
+<p class="panel-note">Exporte une sauvegarde pour la garder en sécurité, ou pour la réimporter sur un autre téléphone qui participe au contrôle d'accès.</p>
+<button class="panel-btn danger" id="db-clear-btn">Tout effacer</button>
+</div>
+</section>
+</main>
+<div class="tabs">
+<button class="tab-btn active" data-view="view-invites">Invitations</button>
+<button class="tab-btn" data-view="view-scan">Contrôle d'accès</button>
+<button class="tab-btn" data-view="view-db">Base de données</button>
+</div>
+</div>
+<!-- QR modal for a single guest -->
+<div class="modal-overlay" id="qr-modal">
+<div class="invite-card" id="invite-card-el">
+<button class="modal-close" id="qr-modal-close">✕</button>
+<div class="eyebrow" id="qr-modal-eyebrow">Carte d'invitation</div>
+<img class="invite-photo" id="qr-modal-photo" style="display:none;">
+<div class="invite-message" id="qr-modal-message"></div>
+<div class="invite-name" id="qr-modal-name"></div>
+<div class="invite-table" id="qr-modal-table"></div>
+<div class="invite-qr-box" id="qr-modal-code"></div>
+<div class="invite-venue" id="qr-modal-venue"></div>
+<div class="invite-venue" id="qr-modal-time"></div>
+<div class="invite-contacts" id="qr-modal-contacts"></div>
+<div class="invite-hint">Présente ce QR code à l'entrée pour être identifié.</div>
+<button class="invite-share-btn" id="qr-modal-share">Envoyer l'invitation</button>
+<button class="invite-save-btn" id="qr-modal-save">Enregistrer sur le téléphone</button>
+<button class="invite-print-btn" id="qr-modal-print">Imprimer</button>
+</div>
+</div>
+<!-- Document import preview -->
+<div class="modal-overlay" id="import-preview-modal">
+<div class="invite-card" style="max-width:420px;text-align:left;">
+<button class="modal-close" id="import-preview-close">✕</button>
+<div class="eyebrow">Import de liste</div>
+<div class="invite-name" style="font-size:17px;margin-bottom:6px;" id="import-preview-title">Noms trouvés</div>
+<p class="panel-note" style="margin:0 0 14px;">Décoche ou corrige les lignes incorrectes avant d'importer. Chaque ligne deviendra un invité avec sa propre carte QR.</p>
+<div style="max-height:360px;overflow-y:auto;border:1px solid var(--line);border-radius:12px;padding:8px;" id="import-preview-list"></div>
+<div style="display:flex;gap:8px;margin-top:14px;">
+<button class="panel-btn secondary" id="import-preview-toggle-all" style="margin-top:0;">Tout (dé)cocher</button>
+<button class="panel-btn" id="import-preview-confirm" style="margin-top:0;">Importer</button>
+</div>
+</div>
+</div>
+<!-- Lightbox : aperçu plein écran d'un fichier importé, façon WhatsApp/Facebook -->
+<div class="modal-overlay" id="import-lightbox" style="z-index:250;">
+<button class="modal-close" id="import-lightbox-close" style="position:fixed;top:20px;right:20px;background:rgba(0,0,0,.5);border-radius:50%;width:40px;height:40px;">✕</button>
+<img id="import-lightbox-img" style="max-width:94vw;max-height:88vh;object-fit:contain;border-radius:8px;">
+<div id="import-lightbox-caption" style="position:absolute;bottom:24px;left:0;right:0;text-align:center;color:var(--cream-dim);font-size:12px;"></div>
+</div>
+<!-- Database guest edit modal -->
+<div class="modal-overlay" id="db-edit-modal">
+<div class="invite-card" style="max-width:380px;text-align:left;">
+<button class="modal-close" id="db-edit-close">✕</button>
+<div class="eyebrow">Modifier l'invité</div>
+<input type="hidden" id="db-edit-guest-id">
+<div class="add-form add-form-name" style="margin-top:10px;">
+<select id="db-edit-civility">
+<option value="M.">M.</option>
+<option value="Mme">Mme</option>
+<option value="Mlle">Mlle</option>
+<option value="Couple">Couple</option>
+</select>
+<input type="text" id="db-edit-name" placeholder="Nom de l'invité" maxlength="60">
+</div>
+<div class="add-form add-form-details">
+<input type="text" id="db-edit-table" placeholder="Table" maxlength="20">
+<input type="number" id="db-edit-count" placeholder="Nb. personnes" min="1" max="50">
+</div>
+<div class="add-form" style="margin-bottom:14px;">
+<input type="tel" id="db-edit-contact" placeholder="Contact (téléphone)" maxlength="30">
+</div>
+<div class="lock-error" id="db-edit-error" style="display:block;"></div>
+<button class="panel-btn" id="db-edit-save" style="margin-top:6px;">Enregistrer les modifications</button>
+</div>
+</div>
+<!-- Scan result stamp -->
+<div class="result-overlay" id="result-overlay">
+<div class="stamp-card">
+<div class="stamp-ring" id="stamp-ring">
+<div class="stamp-text" id="stamp-text"></div>
+</div>
+<div class="result-name" id="result-name"></div>
+<div class="result-meta" id="result-meta"></div>
+<div class="result-detail" id="result-detail"></div>
+<button class="result-close" id="result-close">Scanner suivant</button>
+</div>
+</div>
+<!-- Settings / security modal -->
+<div class="modal-overlay" id="settings-modal">
+<div class="panel-card">
+<button class="modal-close" id="settings-modal-close">✕</button>
+<div class="panel-title">Sécurité</div>
+<div class="panel-block">
+<div class="panel-label">Changer le code d'accès</div>
+<input type="password" id="change-pin-current" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Code actuel">
+<input type="password" id="change-pin-new" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Nouveau code">
+<input type="password" id="change-pin-confirm" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Confirme le nouveau code">
+<button class="panel-btn" id="change-pin-btn">Mettre à jour le code</button>
+<div class="panel-error" id="change-pin-error"></div>
+<div class="panel-success" id="change-pin-success"></div>
+</div>
+<div class="panel-block">
+<div class="panel-label">Fin automatique de la fête</div>
+<input type="datetime-local" id="party-end-input">
+<button class="panel-btn secondary" id="party-end-save-btn">Enregistrer la date de fin</button>
+<p class="panel-note">Passé cette date et cette heure, l'application se reverrouille automatiquement et redemandera le code d'accès. Cette heure est aussi affichée sur les cartes d'invitation.</p>
+</div>
+<div class="panel-block">
+<button class="panel-btn secondary" id="lock-now-btn">Verrouiller maintenant</button>
+<p class="panel-note">Verrouille immédiatement l'application, par exemple à la fin de la soirée.</p>
+</div>
+<div class="panel-block">
+<div class="panel-label">Informations affichées sur la carte d'invitation</div>
+<input type="text" id="event-venue-input" placeholder="Nom de la salle">
+<input type="text" id="event-address-input" placeholder="Adresse de la salle">
+<div class="panel-label" style="margin-top:14px;">Heure de début de la fête</div>
+<input type="datetime-local" id="event-start-input">
+<input type="text" id="event-contacts-input" placeholder="Contacts des mariés (ex : 09xx.. / 08xx..)">
+<div class="panel-label" style="margin-top:14px;">Type de fête</div>
+<select id="event-type-input">
+<option value="mariage">Mariage</option>
+<option value="anniversaire">Anniversaire</option>
+<option value="bapteme">Baptême</option>
+<option value="collation">Collation des grades</option>
+<option value="fiancailles">Fiançailles</option>
+<option value="autre">Autre</option>
+</select>
+<div class="panel-label" style="margin-top:14px;">Message d'invitation (modifiable, plusieurs lignes)</div>
+<textarea id="event-custom-message-input" placeholder="Le texte par défaut du type de fête choisi s'affichera si tu laisses ce champ vide." rows="5"></textarea>
+<button class="panel-btn secondary" id="event-message-reset-btn" style="margin-top:8px;">Réinitialiser au texte par défaut</button>
+<div class="panel-label" style="margin-top:14px;">Thème de couleur de la carte</div>
+<select id="event-theme-input">
+<option value="or">Or &amp; Ivoire</option>
+<option value="rose">Rose Poudré</option>
+<option value="emeraude">Vert Émeraude</option>
+<option value="bleu">Bleu Royal</option>
+<option value="corail">Corail &amp; Pêche</option>
+<option value="lavande">Lavande</option>
+</select>
+<div class="panel-label" style="margin-top:14px;">Style de composition de la carte</div>
+<select id="event-style-input">
+<option value="floral">Floral</option>
+<option value="minimaliste">Minimaliste &amp; Épuré</option>
+<option value="geometrique">Minimalisme Géométrique &amp; Moderne</option>
+<option value="botanique">Botanique &amp; Aquarelle (Nature &amp; Romantisme)</option>
+<option value="luxe">Luxury &amp; Luxe (Dorure / Métallisé)</option>
+<option value="cadre">Cadre Ornemental (Or / Argent selon le thème)</option>
+<option value="cadre-floral">Cadre Floral Complet (guirlande sur tout le pourtour)</option>
+</select>
+<div class="panel-label" style="margin-top:14px;">Police du texte de la carte</div>
+<select id="event-font-input">
+<option value="playfair">Playfair Display (élégant classique)</option>
+<option value="cormorant">Cormorant Garamond (raffiné fin)</option>
+<option value="greatvibes">Great Vibes (calligraphie manuscrite)</option>
+<option value="marcellus">Marcellus (romain sobre)</option>
+<option value="cinzel">Cinzel (gravé majestueux)</option>
+<option value="montserrat">Montserrat (moderne épuré)</option>
+</select>
+<div class="panel-label" style="margin-top:14px;">Photo des mariés / de l'événement (optionnelle)</div>
+<input type="file" id="event-photo-input" accept="image/*" style="display:none;">
+<div id="event-photo-preview-wrap" style="display:none;text-align:center;margin-bottom:10px;">
+<img id="event-photo-preview" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:2px solid var(--gold-dim);">
+</div>
+<div style="display:flex;gap:8px;">
+<button class="panel-btn secondary" id="event-photo-pick-btn" style="margin-top:0;flex:1;">Choisir une photo</button>
+<button class="panel-btn secondary" id="event-photo-remove-btn" style="margin-top:0;flex:1;display:none;">Retirer</button>
+</div>
+<button class="panel-btn secondary" id="event-info-save-btn">Enregistrer</button>
+<div class="panel-success" id="event-info-success"></div>
+<p class="panel-note">Ces informations apparaîtront sur chaque carte d'invitation, sous le nom de l'invité. L'heure de fin utilisée ici est celle définie plus haut (« Fin automatique de la fête »).</p>
+</div>
+<div class="panel-block">
+<div class="panel-label">Identifiant de cet appareil</div>
+<p class="panel-note" style="margin-top:0;">Pour bloquer précisément cet appareil à distance, communique-toi cet identifiant, puis ajoute-le dans le fichier <code>revoked.json</code> de ton dépôt GitHub.</p>
+<div class="lock-error" id="device-id-tag" style="display:block;color:var(--gold);background:var(--panel-2);border:1px solid var(--gold-dim);font-family:'IBM Plex Mono','SF Mono','Courier New',monospace;font-size:16px;letter-spacing:.08em;text-align:center;padding:12px;border-radius:10px;">—</div>
+</div>
+<div class="panel-block">
+<div class="panel-label">🔒 Espace propriétaire</div>
+<p class="panel-note" style="margin-top:0;">Réservé au propriétaire : changer le code maître, ou désactiver l'application.</p>
+<div id="owner-space-locked">
+<input type="password" id="owner-space-unlock-input" placeholder="Code du propriétaire" inputmode="text">
+<button class="panel-btn secondary" id="owner-space-unlock-btn" style="margin-top:8px;">Déverrouiller cet espace</button>
+<div class="panel-error" id="owner-space-unlock-error"></div>
+</div>
+<div id="owner-space-unlocked" style="display:none;">
+<div class="panel-label" style="margin-top:4px;">Changer le code propriétaire (sur cet appareil)</div>
+<input type="password" id="owner-space-new-1" placeholder="Nouveau code propriétaire">
+<input type="password" id="owner-space-new-2" placeholder="Confirme le nouveau code">
+<button class="panel-btn secondary" id="owner-space-change-btn" style="margin-top:8px;">Enregistrer le nouveau code</button>
+<div class="panel-error" id="owner-space-change-error"></div>
+<div class="panel-success" id="owner-space-change-success"></div>
+<p class="panel-note">⚠️ Ce changement ne s'applique qu'à <strong>cet appareil</strong>. Les autres appareils déjà autorisés, et tout nouvel appareil, continueront de demander l'ancien code tant qu'ils n'ont pas été changés individuellement ici.</p>
+<div class="panel-label" style="margin-top:18px;">Désactiver l'application</div>
+<button class="panel-btn danger" id="owner-space-disable-device-btn" style="margin-top:0;">Désactiver sur cet appareil</button>
+<p class="panel-note">Reverrouille immédiatement cet appareil et efface son code d'accès quotidien : il faudra ressaisir le code propriétaire pour le réactiver.</p>
+<p class="panel-note">Pour désactiver l'application sur <strong>tous les appareils en une fois</strong> (y compris ceux hors ligne dès leur reconnexion), passe <code>"globalLock"</code> à <code>true</code> dans le fichier <code>revoked.json</code> de ton dépôt GitHub.</p>
+</div>
+</div>
+<div class="panel-block" style="text-align:center;">
+<p class="panel-note" style="margin:0;color:var(--cream-dim);">Honoré Graphic — <span id="app-version-tag">build 2026-08-05</span></p>
+</div>
+</div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.11.0/mammoth.browser.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+<script>
+(function(){
+let crashShown = false;
+function showCrashScreen(msg){
+if(crashShown) return;
+crashShown = true;
+const div = document.createElement('div');
+div.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#0b0b0f;color:#ede9e0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;font-family:sans-serif;';
+div.innerHTML = '<div style="font-size:15px;font-weight:700;margin-bottom:10px;">Un problème est survenu</div>'
++ '<div style="font-size:12px;color:#9d9a92;margin-bottom:20px;max-width:320px;">'+ (msg||'Erreur inconnue') +'</div>'
++ '<button id="crash-reload-btn" style="background:#c9a86a;color:#171216;border:none;font-weight:800;padding:14px 26px;border-radius:12px;">Recharger l\'application</button>';
+document.body.appendChild(div);
+document.getElementById('crash-reload-btn').addEventListener('click', ()=>{ window.location.reload(); });
+}
+window.addEventListener('error', (e)=>{
+showCrashScreen((e.message||'Erreur JavaScript') + (e.filename ? ' — ' + e.filename.split('/').pop() + ':' + e.lineno : ''));
+});
+window.addEventListener('unhandledrejection', (e)=>{
+const reason = e.reason;
+showCrashScreen('Promesse rejetée : ' + (reason && (reason.message || reason)));
+});
+})();
+</script>
+<script>
+(function(){
+const DB_NAME = 'honore-graphic-db';
+const DB_VERSION = 1;
+const STORE = 'kv';
+let dbPromise = null;
+function withTimeout(promise, ms, label){
+return Promise.race([
+promise,
+new Promise((_, reject)=> setTimeout(()=> reject(new Error('Délai dépassé' + (label ? ' (' + label + ')' : ''))), ms))
+]);
+}
+function getDB(){
+if(dbPromise) return dbPromise;
+dbPromise = new Promise((resolve, reject)=>{
+let req;
+try{
+req = indexedDB.open(DB_NAME, DB_VERSION);
+}catch(e){ reject(e); return; }
+req.onupgradeneeded = ()=>{
+const db = req.result;
+if(!db.objectStoreNames.contains(STORE)){
+db.createObjectStore(STORE, { keyPath:'key' });
+}
+};
+req.onsuccess = ()=> resolve(req.result);
+req.onerror = ()=> reject(req.error);
+req.onblocked = ()=> reject(new Error('Stockage bloqué (une autre fenêtre l\'utilise peut-être)'));
+});
+return withTimeout(dbPromise, 5000, 'ouverture du stockage').catch((e)=>{
+dbPromise = null; // on retentera une prochaine fois plutôt que de rester bloqué sur cet échec
+throw e;
+});
+}
+let indexedDBFailed = false;
+const memoryFallback = new Map();
+async function kvGet(key){
+if(indexedDBFailed) return memoryFallback.has(key) ? memoryFallback.get(key) : null;
+try{
+const db = await getDB();
+return await withTimeout(new Promise((resolve, reject)=>{
+const tx = db.transaction(STORE, 'readonly');
+const req = tx.objectStore(STORE).get(key);
+req.onsuccess = ()=> resolve(req.result ? req.result.value : null);
+req.onerror = ()=> reject(req.error);
+}), 5000, 'lecture');
+}catch(e){
+indexedDBFailed = true;
+console.error('Stockage local indisponible sur ce navigateur, bascule en mémoire temporaire (non persistante).', e);
+return memoryFallback.has(key) ? memoryFallback.get(key) : null;
+}
+}
+async function kvSet(key, value){
+if(indexedDBFailed){ memoryFallback.set(key, value); return true; }
+try{
+const db = await getDB();
+return await withTimeout(new Promise((resolve, reject)=>{
+const tx = db.transaction(STORE, 'readwrite');
+const req = tx.objectStore(STORE).put({ key, value });
+req.onsuccess = ()=> resolve(true);
+req.onerror = ()=> reject(req.error);
+}), 5000, 'écriture');
+}catch(e){
+indexedDBFailed = true;
+memoryFallback.set(key, value);
+console.error('Stockage local indisponible sur ce navigateur, bascule en mémoire temporaire (non persistante).', e);
+return true;
+}
+}
+let guests = [];
+let guestsListDirty = true; // si true, la liste affichée doit être régénérée avant d'être montrée
+async function loadGuests(renderNow){
+try{
+const val = await kvGet('guest-list');
+guests = val ? JSON.parse(val) : [];
+}catch(e){
+guests = [];
+}
+guestsListDirty = true;
+if(renderNow !== false){
+try{ renderGuests(); }catch(e){ console.error('renderGuests failed', e); }
+try{ renderDatabase(); }catch(e){ console.error('renderDatabase failed', e); }
+guestsListDirty = false;
+}
+}
+function refreshGuestViewsIfNeeded(){
+if(!guestsListDirty) return;
+try{ renderGuests(); }catch(e){ console.error('renderGuests failed', e); }
+try{ renderDatabase(); }catch(e){ console.error('renderDatabase failed', e); }
+guestsListDirty = false;
+}
+async function saveGuests(){
+try{
+await kvSet('guest-list', JSON.stringify(guests));
+}catch(e){
+console.error('Erreur de sauvegarde', e);
+alert("La sauvegarde a échoué sur cet appareil. Vérifie que le navigateur autorise le stockage local pour ce site.");
+}
+}
+function genId(){
+const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+let s='';
+for(let i=0;i<7;i++) s += chars[Math.floor(Math.random()*chars.length)];
+return 'FETE-' + s;
+}
+function encodeGuestPayload(guest){
+return JSON.stringify({
+v: 1,
+id: guest.id,
+civility: guest.civility,
+name: guest.name,
+table: guest.table,
+count: guest.count,
+contact: guest.contact
+});
+}
+function decodeGuestPayload(raw){
+try{
+const data = JSON.parse(raw);
+if(data && data.id) return data;
+}catch(e){ /* not our format */ }
+return null;
+}
+function escapeHtml(str){
+const d = document.createElement('div');
+d.textContent = str == null ? '' : String(str);
+return d.innerHTML;
+}
+function guestStatusBadge(g){
+const total = g.count || 1;
+const entered = typeof g.enteredCount === 'number' ? g.enteredCount : (g.checkedIn ? total : 0);
+if(entered <= 0) return { cls:'status-pending', label:'En attente' };
+if(entered >= total) return { cls:'status-in', label: total>1 ? `Entré (${entered}/${total})` : 'Entré' };
+return { cls:'status-partial', label:`Partiel (${entered}/${total})` };
+}
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+btn.addEventListener('click', ()=>{
+document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+btn.classList.add('active');
+document.getElementById(btn.dataset.view).classList.add('active');
+if(btn.dataset.view !== 'view-scan') stopCamera();
+if(btn.dataset.view === 'view-invites' || btn.dataset.view === 'view-db'){
+refreshGuestViewsIfNeeded();
+}
+});
+});
+function renderGuests(){
+const list = document.getElementById('guest-list');
+if(guests.length === 0){
+list.innerHTML = '<div class="empty-state">Aucun invité pour l\'instant.<br>Ajoute un nom ci-dessus pour créer la première carte.</div>';
+return;
+}
+list.innerHTML = '';
+[...guests].reverse().forEach(g=>{
+try{
+const card = document.createElement('div');
+card.className = 'guest-card';
+const badge = guestStatusBadge(g);
+card.innerHTML = `
+<div class="guest-qr-thumb" data-thumb="${g.id}">◈</div>
+<div class="guest-info">
+<div class="guest-name">${escapeHtml((g.civility ? g.civility + ' ' : '') + (g.name||''))}</div>
+<div class="guest-meta">${g.table ? 'Table ' + escapeHtml(g.table) + ' · ' : ''}${g.count||1} pers.${g.contact ? ' · ' + escapeHtml(g.contact) : ''}</div>
+<div class="guest-id">${g.id||''}</div>
+</div>
+<div class="guest-status ${badge.cls}">${badge.label}</div>
+<button class="del-btn" data-del="${g.id}">✕</button>
+`;
+card.addEventListener('click', (e)=>{
+if(e.target.closest('.del-btn')) return;
+openQrModal(g);
+});
+list.appendChild(card);
+}catch(err){
+console.error('Carte invité ignorée (données invalides)', g, err);
+}
+});
+list.querySelectorAll('[data-del]').forEach(btn=>{
+btn.addEventListener('click', async (e)=>{
+e.stopPropagation();
+const id = btn.dataset.del;
+if(!confirm('Retirer cet invité de la liste ? Cette action est définitive.')) return;
+guests = guests.filter(g=>g.id!==id);
+await saveGuests();
+renderGuests();
+renderDatabase();
+});
+});
+}
+const civilityInput = document.getElementById('guest-civility-input');
+const nameInput = document.getElementById('guest-name-input');
+const tableInput = document.getElementById('guest-table-input');
+const countInput = document.getElementById('guest-count-input');
+const contactInput = document.getElementById('guest-contact-input');
+const addBtn = document.getElementById('add-guest-btn');
+async function addGuest(){
+const name = nameInput.value.trim();
+if(!name) return;
+const civility = civilityInput.value;
+const table = tableInput.value.trim();
+const contact = contactInput.value.trim();
+let count = parseInt(countInput.value, 10);
+if(!count || count < 1) count = 1;
+const guest = { id: genId(), civility, name, table, count, contact, checkedIn:false, checkedInAt:null, enteredCount:0, createdAt: Date.now() };
+guests.push(guest);
+nameInput.value='';
+tableInput.value='';
+countInput.value='';
+contactInput.value='';
+civilityInput.value='M.';
+await saveGuests();
+renderGuests();
+renderDatabase();
+openQrModal(guest);
+}
+addBtn.addEventListener('click', addGuest);
+nameInput.addEventListener('keydown', e=>{ if(e.key==='Enter') addGuest(); });
+tableInput.addEventListener('keydown', e=>{ if(e.key==='Enter') addGuest(); });
+countInput.addEventListener('keydown', e=>{ if(e.key==='Enter') addGuest(); });
+contactInput.addEventListener('keydown', e=>{ if(e.key==='Enter') addGuest(); });
+function looksLikeJunkLine(line){
+const t = line.trim();
+if(t.length < 2) return true;
+if(/^\d+([.\-)]|$)/.test(t) && t.replace(/[\d.\-)\s]/g,'').length < 2) return true; // ex: "1.", "12-", numéro de page seul
+const lower = t.toLowerCase();
+const junkWords = ['liste des invités','invitation','table','page','confidentiel','document','word','pdf'];
+if(junkWords.some(w=> lower === w)) return true;
+return false;
+}
+function extractCandidateNames(rawText){
+return rawText
+.split(/\r?\n|;/)
+.map(l=> l.replace(/^[\-•*\u2022\d.\)\s]+/, '').trim()) // retire puces/numérotation en début de ligne
+.filter(l=> l && !looksLikeJunkLine(l))
+.filter((l, i, arr)=> arr.indexOf(l) === i) // supprime les doublons exacts
+.slice(0, 500); // garde-fou
+}
+async function extractDocxText(file){
+const buf = await file.arrayBuffer();
+const result = await mammoth.extractRawText({ arrayBuffer: buf });
+return result.value || '';
+}
+async function extractPdfText(file){
+if(typeof pdfjsLib === 'undefined'){
+throw new Error("La librairie de lecture PDF n'a pas pu se charger depuis internet. Vérifie ta connexion et réessaie.");
+}
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js';
+const buf = await file.arrayBuffer();
+const doc = await pdfjsLib.getDocument({ data: buf }).promise;
+let fullText = '';
+for(let p = 1; p <= doc.numPages; p++){
+const page = await doc.getPage(p);
+const content = await page.getTextContent();
+let lastY = null, line = '';
+content.items.forEach(item=>{
+if(lastY !== null && Math.abs(item.transform[5] - lastY) > 2){
+fullText += line + '\n';
+line = '';
+}
+line += item.str + ' ';
+lastY = item.transform[5];
+});
+fullText += line + '\n';
+}
+return fullText;
+}
+let pendingImportRows = [];
+let pendingImportMode = 'list';
+function importRowComplete(row){
+if(pendingImportMode !== 'cards') return !!(row.name && row.name.trim());
+return !!(row.name && row.name.trim() && row.table && String(row.table).trim());
+}
+function refreshImportRowUI(i){
+const row = pendingImportRows[i];
+const rowEl = document.querySelector(`.import-row[data-row="${i}"]`);
+if(!rowEl) return;
+const cb = rowEl.querySelector('input[type="checkbox"]');
+const complete = importRowComplete(row);
+if(!complete){ row.checked = false; cb.checked = false; }
+cb.disabled = !complete;
+rowEl.classList.toggle('import-row-incomplete', !complete);
+const warn = rowEl.querySelector('.import-row-warning');
+if(warn) warn.style.display = complete ? 'none' : 'block';
+}
+function renderImportPreview(rows, mode){
+pendingImportMode = mode;
+pendingImportRows = rows;
+const list = document.getElementById('import-preview-list');
+document.getElementById('import-preview-title').textContent = rows.length + ' élément(s) trouvé(s)';
+if(rows.length === 0){
+list.innerHTML = '<p class="panel-note" style="margin:0;">Aucune information exploitable n\'a été trouvée. Vérifie le contenu du ou des fichiers puis réessaie.</p>';
+}else{
+list.innerHTML = '';
+if(mode === 'cards'){
+list.insertAdjacentHTML('afterbegin', '<p class="panel-note" style="margin:4px 4px 12px;">Vérifie chaque carte : la case ne peut être cochée que si le nom <b>et</b> la table sont renseignés.</p>');
+rows.forEach((row, i)=>{
+const div = document.createElement('div');
+div.className = 'import-row import-card-row';
+div.dataset.row = i;
+const thumb = row.previewUrl
+? `<img src="${row.previewUrl}" class="import-thumb import-thumb-clickable" data-preview="${i}">`
+: `<div class="import-thumb import-thumb-file">${(row.ext||'?').toUpperCase()}</div>`;
+div.innerHTML = `
+<div class="import-card-row-top">
+${thumb}
+<div class="import-card-row-fields">
+<div class="import-card-row-line">
+<select data-idx="${i}" data-field="civility" class="import-select-civility">
+<option value="M." ${row.civility==='M.'?'selected':''}>M.</option>
+<option value="Mme" ${row.civility==='Mme'?'selected':''}>Mme</option>
+<option value="Mlle" ${row.civility==='Mlle'?'selected':''}>Mlle</option>
+<option value="Couple" ${row.civility==='Couple'?'selected':''}>Couple</option>
+</select>
+<input type="text" data-idx="${i}" data-field="name" value="${escapeHtml(row.name||'')}" placeholder="Nom (à vérifier)" class="import-input-name">
+</div>
+<div class="import-card-row-line">
+<input type="text" data-idx="${i}" data-field="table" value="${escapeHtml(row.table||'')}" placeholder="Table (obligatoire)" class="import-input-table">
+<label class="import-check-label"><input type="checkbox" data-idx="${i}" data-field="checked" ${row.checked?'checked':''}> Importer</label>
+</div>
+<div class="import-row-warning" style="display:none;">⚠️ Nom et table requis avant de pouvoir cocher</div>
+${row.error ? `<div class="import-row-warning" style="display:block;">⚠️ Lecture échouée : ${escapeHtml(row.error)}</div>` : ''}
+</div>
+</div>
+`;
+list.appendChild(div);
+});
+}else{
+rows.forEach((row, i)=>{
+const div = document.createElement('div');
+div.className = 'import-row';
+div.innerHTML = `<input type="checkbox" data-idx="${i}" data-field="checked" checked><input type="text" data-idx="${i}" data-field="name" value="${escapeHtml(row.name)}">`;
+list.appendChild(div);
+});
+}
+list.querySelectorAll('.import-thumb-clickable').forEach(img=>{
+img.addEventListener('click', ()=>{
+const row = pendingImportRows[img.dataset.preview];
+document.getElementById('import-lightbox-img').src = row.previewUrl;
+document.getElementById('import-lightbox-caption').textContent = row.sourceFile || '';
+document.getElementById('import-lightbox').classList.add('active');
+});
+});
+list.querySelectorAll('input[type="checkbox"]').forEach(cb=>{
+cb.addEventListener('change', ()=>{ pendingImportRows[cb.dataset.idx].checked = cb.checked; });
+});
+list.querySelectorAll('input[type="text"], select').forEach(inp=>{
+const handler = ()=>{
+pendingImportRows[inp.dataset.idx][inp.dataset.field] = inp.value;
+if(mode === 'cards') refreshImportRowUI(inp.dataset.idx);
+};
+inp.addEventListener('input', handler);
+inp.addEventListener('change', handler);
+});
+if(mode === 'cards'){
+rows.forEach((row, i)=> refreshImportRowUI(i));
+}
+}
+document.getElementById('import-preview-modal').classList.add('active');
+}
+document.getElementById('import-doc-btn').addEventListener('click', ()=>{
+document.getElementById('import-doc-file').click();
+});
+document.getElementById('import-doc-file').addEventListener('change', async (e)=>{
+const file = e.target.files[0];
+e.target.value = ''; // permet de resélectionner le même fichier plus tard
+if(!file) return;
+const statusEl = document.getElementById('import-doc-status');
+statusEl.style.display = 'block';
+statusEl.textContent = 'Lecture du document en cours…';
+try{
+const ext = file.name.split('.').pop().toLowerCase();
+let text = '';
+if(ext === 'docx'){
+if(typeof mammoth === 'undefined') throw new Error("La librairie de lecture Word n'a pas pu se charger depuis internet. Vérifie ta connexion et réessaie.");
+text = await extractDocxText(file);
+}else if(ext === 'pdf'){
+text = await extractPdfText(file);
+}else if(ext === 'doc'){
+throw new Error("Le format .doc (Word 97-2003) n'est pas pris en charge — enregistre le fichier en .docx puis réessaie.");
+}else{
+throw new Error('Format non reconnu. Utilise un fichier .docx ou .pdf.');
+}
+const names = extractCandidateNames(text);
+statusEl.style.display = 'none';
+renderImportPreview(names.map(n=> ({ name:n, checked:true })), 'list');
+}catch(err){
+statusEl.textContent = "Échec de la lecture : " + (err && err.message ? err.message : err);
+}
+});
+function parseCardText(rawText){
+const lines = rawText.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+let civility = 'M.';
+let table = '';
+const nameParts = [];
+const civilityRegex = /\b(mme|mlle|m\.|monsieur|madame|mademoiselle|couple)\b/i;
+const tableRegex = /table\s*[:\-]?\s*([a-z0-9À-ÿ]+)/i;
+lines.forEach(line=>{
+const tableMatch = line.match(tableRegex);
+if(tableMatch){
+table = tableMatch[1];
+line = line.replace(tableRegex, '').trim();
+}
+const civMatch = line.match(civilityRegex);
+if(civMatch){
+const c = civMatch[1].toLowerCase();
+if(c.startsWith('mme') || c === 'madame') civility = 'Mme';
+else if(c.startsWith('mlle') || c === 'mademoiselle') civility = 'Mlle';
+else if(c.startsWith('couple')) civility = 'Couple';
+else civility = 'M.';
+line = line.replace(civilityRegex, '').trim();
+}
+if(line && !looksLikeJunkLine(line) && line.length < 60){
+nameParts.push(line);
+}
+});
+const name = nameParts.sort((a,b)=> b.length - a.length)[0] || '';
+return { civility, name, table };
+}
+async function extractImageText(file){
+if(typeof Tesseract === 'undefined'){
+throw new Error("La librairie de reconnaissance de texte n'a pas pu se charger depuis internet. Vérifie ta connexion et réessaie.");
+}
+const { data } = await Tesseract.recognize(file, 'fra');
+return data && data.text ? data.text : '';
+}
+async function renderPdfFirstPageCanvas(file){
+if(typeof pdfjsLib === 'undefined'){
+throw new Error("La librairie de lecture PDF n'a pas pu se charger depuis internet.");
+}
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.worker.min.js';
+const buf = await file.arrayBuffer();
+const doc = await pdfjsLib.getDocument({ data: buf }).promise;
+const page = await doc.getPage(1); // une carte = généralement une seule page
+const viewport = page.getViewport({ scale: 2 });
+const canvas = document.createElement('canvas');
+canvas.width = viewport.width;
+canvas.height = viewport.height;
+await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+return canvas;
+}
+async function extractPdfPageAsImageText(file, cachedCanvas){
+const canvas = cachedCanvas || await renderPdfFirstPageCanvas(file);
+return await extractImageText(canvas);
+}
+async function processInvitationFile(file){
+const ext = file.name.split('.').pop().toLowerCase();
+let text = '';
+let previewDataUrl = null;
+if(ext === 'jpg' || ext === 'jpeg' || ext === 'png'){
+text = await extractImageText(file);
+}else if(ext === 'pdf'){
+let pageCanvas = null;
+try{ pageCanvas = await renderPdfFirstPageCanvas(file); previewDataUrl = pageCanvas.toDataURL('image/png'); }catch(e){ /* aperçu impossible, on continue sans */ }
+text = await extractPdfText(file);
+if(!text || text.trim().length < 4){
+text = await extractPdfPageAsImageText(file, pageCanvas);
+}
+}else if(ext === 'docx'){
+if(typeof mammoth === 'undefined') throw new Error("La librairie de lecture Word n'a pas pu se charger.");
+text = await extractDocxText(file);
+}else{
+throw new Error('Format non pris en charge pour ' + file.name);
+}
+return Object.assign(parseCardText(text), { previewDataUrl });
+}
+document.getElementById('import-cards-btn').addEventListener('click', ()=>{
+document.getElementById('import-cards-file').click();
+});
+document.getElementById('import-cards-file').addEventListener('change', async (e)=>{
+const files = Array.from(e.target.files || []);
+e.target.value = '';
+if(files.length === 0) return;
+const statusEl = document.getElementById('import-cards-status');
+statusEl.style.display = 'block';
+const results = [];
+for(let i=0; i<files.length; i++){
+statusEl.textContent = `Lecture ${i+1}/${files.length} — ${files[i].name}…`;
+const ext = files[i].name.split('.').pop().toLowerCase();
+const isImage = ext==='jpg' || ext==='jpeg' || ext==='png';
+const previewUrl = isImage ? URL.createObjectURL(files[i]) : null;
+try{
+const parsed = await processInvitationFile(files[i]);
+const autoOk = !!(parsed.name && parsed.name.trim() && parsed.table && String(parsed.table).trim());
+const finalPreview = previewUrl || parsed.previewDataUrl || null;
+results.push(Object.assign({ checked:false, autoOk, sourceFile: files[i].name, previewUrl: finalPreview, ext }, parsed));
+}catch(err){
+results.push({ checked:false, autoOk:false, civility:'M.', name:'', table:'', sourceFile: files[i].name, previewUrl, ext, error: (err && err.message) || String(err) });
+}
+}
+statusEl.style.display = 'none';
+renderImportPreview(results, 'cards');
+});
+document.getElementById('import-lightbox-close').addEventListener('click', ()=>{
+document.getElementById('import-lightbox').classList.remove('active');
+});
+document.getElementById('import-lightbox').addEventListener('click', (e)=>{
+if(e.target.id === 'import-lightbox') document.getElementById('import-lightbox').classList.remove('active');
+});
+document.getElementById('import-preview-close').addEventListener('click', ()=>{
+document.getElementById('import-preview-modal').classList.remove('active');
+pendingImportRows.forEach(r=>{ if(r.previewUrl) URL.revokeObjectURL(r.previewUrl); });
+});
+document.getElementById('import-preview-toggle-all').addEventListener('click', ()=>{
+const readyRows = pendingImportRows.filter(r=> importRowComplete(r));
+const allChecked = readyRows.length>0 && readyRows.every(r=>r.checked);
+pendingImportRows.forEach(r=>{ if(importRowComplete(r)) r.checked = !allChecked; });
+document.querySelectorAll('#import-preview-list input[data-field="checked"]').forEach((cb,i)=>{ cb.checked = pendingImportRows[i].checked; });
+});
+document.getElementById('import-preview-confirm').addEventListener('click', async ()=>{
+const toImport = pendingImportRows.filter(r=> r.checked && r.name && r.name.trim());
+if(toImport.length === 0){
+document.getElementById('import-preview-modal').classList.remove('active');
+return;
+}
+toImport.forEach(row=>{
+guests.push({
+id: genId(),
+civility: row.civility || 'M.',
+name: row.name.trim(),
+table: (row.table || '').trim(),
+count: 1,
+contact:'',
+checkedIn:false, checkedInAt:null, enteredCount:0, createdAt: Date.now()
+});
+});
+await saveGuests();
+renderGuests();
+renderDatabase();
+document.getElementById('import-preview-modal').classList.remove('active');
+alert(toImport.length + ' invité(s) importé(s) avec succès. Ouvre chaque carte pour vérifier/compléter les infos si besoin.');
+});
+const qrModal = document.getElementById('qr-modal');
+let currentModalGuest = null;
+function formatEventDateTime(iso){
+if(!iso) return '';
+try{
+const d = new Date(iso);
+return d.toLocaleDateString('fr-FR', { day:'2-digit', month:'long' }) + ' à ' + d.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+}catch(e){ return ''; }
+}
+const EVENT_MESSAGES = {
+mariage: "Avec joie et émotion,\nnous vous convions à célébrer\nl'union de deux cœurs\net le début d'une nouvelle vie ensemble.",
+anniversaire: "Une nouvelle année de vie se célèbre !\nVenez partager rires, musique et bonheur\npour souffler ensemble\ncette bougie supplémentaire.",
+bapteme: "Dans la joie et la grâce,\nnous vous invitons à célébrer\nce moment béni\net à l'accompagner de vos prières.",
+collation: "Après tant d'efforts et de persévérance,\nvenez célébrer avec nous\ncette réussite académique\net ce nouveau chapitre qui commence.",
+fiancailles: "C'est avec un cœur rempli de joie\nque nous vous convions à célébrer\nla promesse d'un amour sincère\net les prémices d'une belle union.",
+autre: "Vous êtes cordialement invité(e)\nà partager avec nous\nun moment inoubliable\nempli de joie et de convivialité."
+};
+function currentInviteMessage(){
+if(settings.customMessage && settings.customMessage.trim()){
+return settings.customMessage.trim();
+}
+return EVENT_MESSAGES[settings.eventType] || EVENT_MESSAGES.mariage;
+}
+function buildInviteExtraLines(){
+const venueLine = [settings.venueName, settings.venueAddress].filter(Boolean).join(' — ');
+const startStr = formatEventDateTime(settings.eventStartAt);
+const endStr = formatEventDateTime(settings.partyEndAt);
+let timeLine = '';
+if(startStr && endStr) timeLine = `Du ${startStr} au ${endStr}`;
+else if(startStr) timeLine = `Début : ${startStr}`;
+else if(endStr) timeLine = `Fin : ${endStr}`;
+const contactsLine = settings.coupleContacts ? 'Contacts : ' + settings.coupleContacts : '';
+return { venueLine, timeLine, contactsLine };
+}
+function toQrSafeUtf8(str){
+try{ return unescape(encodeURIComponent(str)); }catch(e){ return str; }
+}
+function safeGenerateQR(container, text, size){
+container.innerHTML = '';
+const opts = { text, width:size, height:size, colorDark:'#0b0b0f', colorLight:'#ffffff' };
+try{
+new QRCode(container, opts);
+return true;
+}catch(e){
+for(let t=4; t<=20; t++){
+try{
+container.innerHTML = '';
+new QRCode(container, Object.assign({}, opts, { typeNumber:t }));
+return true;
+}catch(e2){ /* on essaie la taille suivante */ }
+}
+container.innerHTML = '';
+const errDiv = document.createElement('div');
+errDiv.style.cssText = 'padding:14px;color:#b6484c;font-size:11px;text-align:center;';
+errDiv.textContent = "Impossible de générer ce QR code (nom trop long ou caractères non pris en charge). Essaie de raccourcir légèrement le nom.";
+container.appendChild(errDiv);
+return false;
+}
+}
+function openQrModal(guest){
+currentModalGuest = guest;
+document.getElementById('qr-modal-name').textContent = (guest.civility ? guest.civility + ' ' : '') + guest.name;
+const tableEl = document.getElementById('qr-modal-table');
+tableEl.textContent = guest.table ? 'Table ' + guest.table : '';
+tableEl.style.display = guest.table ? 'inline-block' : 'none';
+const box = document.getElementById('qr-modal-code');
+safeGenerateQR(box, toQrSafeUtf8(encodeGuestPayload(guest)), 190);
+const cardEl = document.getElementById('invite-card-el');
+cardEl.className = 'invite-card theme-' + (settings.cardTheme || 'or') + ' style-' + (settings.cardStyle || 'floral') + ' font-' + (settings.cardFont || 'playfair');
+const photoEl = document.getElementById('qr-modal-photo');
+if(settings.coupleImage){
+photoEl.src = settings.coupleImage;
+photoEl.style.display = 'block';
+}else{
+photoEl.style.display = 'none';
+}
+document.getElementById('qr-modal-message').textContent = currentInviteMessage();
+const EVENT_LABELS = { mariage:'Mariage', anniversaire:'Anniversaire', bapteme:'Baptême', collation:'Collation des grades', fiancailles:'Fiançailles', autre:'Invitation' };
+document.getElementById('qr-modal-eyebrow').textContent = EVENT_LABELS[settings.eventType] || 'Carte d\'invitation';
+const { venueLine, timeLine, contactsLine } = buildInviteExtraLines();
+const venueEl = document.getElementById('qr-modal-venue');
+const timeEl = document.getElementById('qr-modal-time');
+const contactsEl = document.getElementById('qr-modal-contacts');
+venueEl.textContent = venueLine;
+venueEl.style.display = venueLine ? 'block' : 'none';
+timeEl.textContent = timeLine;
+timeEl.style.display = timeLine ? 'block' : 'none';
+contactsEl.textContent = contactsLine;
+contactsEl.style.display = contactsLine ? 'block' : 'none';
+qrModal.classList.add('active');
+}
+document.getElementById('qr-modal-close').addEventListener('click', ()=> qrModal.classList.remove('active'));
+qrModal.addEventListener('click', e=>{ if(e.target===qrModal) qrModal.classList.remove('active'); });
+document.getElementById('qr-modal-print').addEventListener('click', ()=>{
+window.print();
+});
+function canvasToBlob(canvas){
+return new Promise(resolve=>canvas.toBlob(resolve, 'image/png'));
+}
+async function captureInviteCard(){
+if(typeof html2canvas === 'undefined'){
+alert("La librairie de génération d'image n'a pas pu se charger depuis internet. Vérifie ta connexion et réessaie dans quelques secondes.");
+return null;
+}
+const cardEl = document.getElementById('invite-card-el');
+const actionsToHide = cardEl.querySelectorAll('.invite-share-btn, .invite-print-btn, .invite-save-btn, .modal-close');
+actionsToHide.forEach(el=> el.style.visibility = 'hidden');
+try{
+return await html2canvas(cardEl, { backgroundColor:null, scale:3, useCORS:true });
+}finally{
+actionsToHide.forEach(el=> el.style.visibility = '');
+}
+}
+document.getElementById('qr-modal-share').addEventListener('click', async ()=>{
+if(!currentModalGuest) return;
+const outCanvas = await captureInviteCard();
+if(!outCanvas){ return; }
+const blob = await canvasToBlob(outCanvas);
+if(!blob) return;
+const fileName = `invitation-${currentModalGuest.name.replace(/\s+/g,'-')}.png`;
+const file = new File([blob], fileName, { type:'image/png' });
+if(navigator.canShare && navigator.canShare({ files:[file] })){
+try{
+await navigator.share({
+files:[file],
+title:'Invitation',
+text:`Voici ton invitation, ${currentModalGuest.name} — présente ce QR code à l'entrée.`
+});
+return;
+}catch(err){
+if(err && err.name === 'AbortError') return;
+}
+}
+downloadBlob(blob, fileName);
+});
+document.getElementById('qr-modal-save').addEventListener('click', async ()=>{
+if(!currentModalGuest) return;
+const outCanvas = await captureInviteCard();
+if(!outCanvas){ return; }
+const blob = await canvasToBlob(outCanvas);
+if(!blob) return;
+const fileName = `invitation-${currentModalGuest.name.replace(/\s+/g,'-')}.png`;
+downloadBlob(blob, fileName);
+});
+function downloadBlob(blob, fileName){
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = fileName;
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+URL.revokeObjectURL(url);
+}
+const camBtn = document.getElementById('cam-toggle');
+const placeholder = document.getElementById('scan-placeholder');
+const guides = document.getElementById('scan-guides');
+const scanLine = document.getElementById('scan-line');
+let html5QrCode = null;
+let scanning = false;
+let cameraBusy = false; // empêche tout démarrage/arrêt pendant qu'une transition est déjà en cours
+async function tryStart(config){
+await html5QrCode.start(
+config,
+{ fps: 10, aspectRatio: 1.0 },
+(decodedText)=>{
+if(!scanning) return;
+try{
+html5QrCode.pause(true);
+}catch(e){ /* déjà en pause, on ignore */ }
+handleScan(decodedText.trim()).catch((err)=>{
+showResult(false, 'Erreur', null, null, "Le scan a échoué. Détail : " + (err && (err.message || err)));
+});
+},
+()=>{ /* frame sans QR détecté : rien à faire, on continue de scanner */ }
+);
+}
+async function fullyStopExistingCamera(){
+if(!html5QrCode) return;
+try{
+const state = html5QrCode.getState ? html5QrCode.getState() : null;
+if(state === 2 || state === 3){ // SCANNING (2) ou PAUSED (3)
+await html5QrCode.stop();
+}
+}catch(e){ /* déjà arrêtée, on ignore */ }
+try{ await html5QrCode.clear(); }catch(e){ /* rien à nettoyer */ }
+html5QrCode = null; // on repart d'une instance neuve à chaque démarrage : évite les états fantômes de la librairie
+}
+async function startCamera(){
+if(cameraBusy) return;
+if(typeof Html5Qrcode === 'undefined'){
+alert("La librairie de scan n'a pas pu se charger depuis internet. Vérifie ta connexion et réessaie dans quelques secondes.");
+return;
+}
+if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+alert("Ce navigateur ne permet pas l'accès à la caméra depuis une page web. Essaie avec Chrome à jour.");
+return;
+}
+cameraBusy = true;
+camBtn.disabled = true;
+try{
+await fullyStopExistingCamera(); // repart toujours d'un état propre, jamais d'une instance recyclée
+html5QrCode = new Html5Qrcode('html5qr-region', { verbose:false });
+try{
+await tryStart({ facingMode: 'environment' });
+}catch(innerErr){
+await tryStart({ facingMode: 'user' });
+}
+placeholder.style.display='none';
+guides.style.display='block';
+scanLine.style.display='block';
+camBtn.textContent = 'Désactiver la caméra';
+scanning = true;
+}catch(err){
+scanning = false;
+const details = (err && (err.name || err.message || err)) ? `\n\nDétail technique : ${err.name || ''} ${err.message || err}`.trim() : '';
+alert("Impossible d'accéder à la caméra. Vérifie les autorisations du navigateur et qu'aucune autre application ne l'utilise déjà." + details);
+}finally{
+cameraBusy = false;
+camBtn.disabled = false;
+}
+}
+async function stopCamera(){
+if(cameraBusy) return;
+cameraBusy = true;
+camBtn.disabled = true;
+scanning = false;
+try{
+await fullyStopExistingCamera();
+}finally{
+placeholder.style.display='flex';
+guides.style.display='none';
+scanLine.style.display='none';
+camBtn.textContent = 'Activer la caméra';
+cameraBusy = false;
+camBtn.disabled = false;
+}
+}
+camBtn.addEventListener('click', ()=>{
+if(cameraBusy) return;
+if(scanning) stopCamera(); else startCamera();
+});
+async function handleScan(data){
+const decoded = decodeGuestPayload(data);
+if(!decoded){
+showResult(false, 'Code inconnu', null, null, "Ce code ne correspond à aucune invitation reconnue. Accès refusé.");
+return;
+}
+try{
+await loadGuests(false); // false: on ne redessine pas tout de suite, pour que le scan reste rapide même avec beaucoup d'invités
+}catch(e){
+showResult(false, 'Erreur', null, null, "Impossible de lire la liste des invités enregistrée sur cet appareil.");
+return;
+}
+let guest = guests.find(g => g.id === decoded.id);
+if(!guest){
+showResult(false, 'Code inconnu', decoded.id, null, "Ce QR code n'a pas été généré par cette application ou ne figure pas dans la base de données. Accès refusé.");
+return;
+}
+const displayName = (guest.civility ? guest.civility + ' ' : '') + guest.name;
+const totalCount = guest.count || 1;
+if(typeof guest.enteredCount !== 'number') guest.enteredCount = guest.checkedIn ? totalCount : 0; // rétrocompatibilité avec les invités déjà enregistrés avant cette mise à jour
+const meta = (guest.table ? 'Table ' + guest.table + '  ·  ' : '')
++ totalCount + (totalCount > 1 ? ' personnes' : ' personne')
++ (guest.contact ? '  ·  ' + guest.contact : '');
+if(guest.enteredCount >= totalCount){
+const t = new Date(guest.checkedInAt);
+const timeStr = t.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+const groupNote = totalCount > 1 ? ` Les ${totalCount} personnes prévues sur cette invitation sont déjà toutes entrées.` : '';
+showResult(false, displayName, meta, guest.id, `Déjà entré à ${timeStr}.${groupNote} Ce code a déjà été utilisé — vérifier l'identité.`);
+return;
+}
+guest.enteredCount += 1;
+guest.checkedIn = guest.enteredCount >= totalCount;
+guest.checkedInAt = Date.now();
+try{
+await saveGuests();
+}catch(e){
+guest.enteredCount -= 1; // on annule l'incrément puisque la sauvegarde a échoué
+guest.checkedIn = guest.enteredCount >= totalCount;
+showResult(false, 'Erreur', null, null, "L'entrée n'a pas pu être enregistrée sur cet appareil. Réessaie.");
+return;
+}
+guestsListDirty = true; // les onglets Invitations / Base de données se rafraîchiront à la prochaine consultation
+const remaining = totalCount - guest.enteredCount;
+let detail;
+if(totalCount <= 1){
+detail = "Accès autorisé — bienvenue !";
+}else if(remaining > 0){
+detail = `Accès autorisé — ${guest.enteredCount}/${totalCount} personnes entrées sur cette invitation. Il reste ${remaining} personne${remaining>1?'s':''} attendue${remaining>1?'s':''}. Ce même code pourra être rescanné pour ${remaining>1?'elles':'elle'}.`;
+}else{
+detail = `Accès autorisé — dernière personne du groupe (${guest.enteredCount}/${totalCount}). Cette invitation est maintenant complète.`;
+}
+showResult(true, displayName, meta, guest.id, detail);
+}
+const resultOverlay = document.getElementById('result-overlay');
+const stampRing = document.getElementById('stamp-ring');
+const stampText = document.getElementById('stamp-text');
+const resultName = document.getElementById('result-name');
+const resultMeta = document.getElementById('result-meta');
+const resultDetail = document.getElementById('result-detail');
+function showResult(granted, name, meta, id, detail){
+stampRing.className = 'stamp-ring' + (granted ? '' : ' denied');
+stampText.textContent = granted ? 'Accès\nautorisé' : (name==='Code inconnu' ? 'Accès\nrefusé' : 'Alerte');
+stampText.style.whiteSpace='pre-line';
+resultName.textContent = name;
+resultMeta.textContent = meta || '';
+resultDetail.textContent = (id ? id + ' — ' : '') + detail;
+resultOverlay.classList.add('active');
+}
+document.getElementById('result-close').addEventListener('click', ()=>{
+resultOverlay.classList.remove('active');
+if(html5QrCode && scanning){ html5QrCode.resume(); }
+});
+function tableSortKey(t){
+if(!t) return [1, ''];
+const n = parseFloat(t);
+return isNaN(n) ? [1, t.toLowerCase()] : [0, n];
+}
+function renderDatabase(filterText){
+const totalInvites = guests.length;
+const totalPeople = guests.reduce((s,g)=> s + (g.count || 1), 0);
+const totalIn = guests.reduce((s,g)=> s + (typeof g.enteredCount === 'number' ? g.enteredCount : (g.checkedIn ? (g.count||1) : 0)), 0);
+document.getElementById('db-stat-invites').textContent = totalInvites;
+document.getElementById('db-stat-people').textContent = totalPeople;
+document.getElementById('db-stat-in').textContent = totalIn;
+const q = (filterText || document.getElementById('db-search').value || '').trim().toLowerCase();
+let filtered = guests;
+if(q){
+filtered = guests.filter(g=>
+(g.name||'').toLowerCase().includes(q) ||
+(g.table||'').toLowerCase().includes(q) ||
+(g.contact||'').toLowerCase().includes(q) ||
+(g.civility||'').toLowerCase().includes(q)
+);
+}
+const groups = {};
+filtered.forEach(g=>{
+const key = g.table ? g.table : 'Sans table';
+if(!groups[key]) groups[key] = [];
+groups[key].push(g);
+});
+const groupKeys = Object.keys(groups).sort((a,b)=>{
+const ka = tableSortKey(a === 'Sans table' ? '' : a);
+const kb = tableSortKey(b === 'Sans table' ? '' : b);
+if(ka[0] !== kb[0]) return ka[0]-kb[0];
+return ka[1] < kb[1] ? -1 : ka[1] > kb[1] ? 1 : 0;
+});
+const container = document.getElementById('db-groups');
+if(filtered.length === 0){
+container.innerHTML = '<div class="empty-state">Aucun invité ne correspond.</div>';
+return;
+}
+container.innerHTML = '';
+groupKeys.forEach(key=>{
+try{
+const wrap = document.createElement('div');
+wrap.className = 'db-group';
+const title = document.createElement('div');
+title.className = 'db-group-title';
+title.textContent = key === 'Sans table' ? 'Sans table assignée' : 'Table ' + key;
+wrap.appendChild(title);
+groups[key].forEach(g=>{
+const row = document.createElement('div');
+row.className = 'db-row';
+const badge = guestStatusBadge(g);
+row.innerHTML = `
+<div class="db-row-info">
+<div class="db-row-name">${escapeHtml((g.civility ? g.civility + ' ' : '') + (g.name||''))}</div>
+<div class="db-row-sub">${g.count||1} pers.${g.contact ? ' · ' + escapeHtml(g.contact) : ''}</div>
+</div>
+<div class="guest-status ${badge.cls}">${badge.label}</div>
+<button class="db-edit-btn" data-edit="${g.id}" title="Modifier">✎</button>
+`;
+row.querySelector('.db-edit-btn').addEventListener('click', ()=> openDbEditModal(g.id));
+wrap.appendChild(row);
+});
+container.appendChild(wrap);
+}catch(err){
+console.error('Groupe de table ignoré (données invalides)', key, err);
+}
+});
+}
+function openDbEditModal(guestId){
+const g = guests.find(x=>x.id === guestId);
+if(!g) return;
+document.getElementById('db-edit-guest-id').value = g.id;
+document.getElementById('db-edit-civility').value = g.civility || 'M.';
+document.getElementById('db-edit-name').value = g.name || '';
+document.getElementById('db-edit-table').value = g.table || '';
+document.getElementById('db-edit-count').value = g.count || 1;
+document.getElementById('db-edit-contact').value = g.contact || '';
+document.getElementById('db-edit-error').textContent = '';
+document.getElementById('db-edit-modal').classList.add('active');
+}
+document.getElementById('db-edit-close').addEventListener('click', ()=>{
+document.getElementById('db-edit-modal').classList.remove('active');
+});
+document.getElementById('db-edit-save').addEventListener('click', async ()=>{
+const id = document.getElementById('db-edit-guest-id').value;
+const g = guests.find(x=>x.id === id);
+if(!g) return;
+const name = document.getElementById('db-edit-name').value.trim();
+if(!name){
+document.getElementById('db-edit-error').textContent = 'Le nom est obligatoire.';
+return;
+}
+let count = parseInt(document.getElementById('db-edit-count').value, 10);
+if(!count || count < 1) count = 1;
+g.civility = document.getElementById('db-edit-civility').value;
+g.name = name;
+g.table = document.getElementById('db-edit-table').value.trim();
+g.count = count;
+g.contact = document.getElementById('db-edit-contact').value.trim();
+if(typeof g.enteredCount === 'number' && g.enteredCount > count) g.enteredCount = count; // sécurité si le nombre de personnes est réduit après des entrées déjà enregistrées
+g.checkedIn = (typeof g.enteredCount === 'number' ? g.enteredCount : 0) >= count;
+await saveGuests();
+renderGuests();
+renderDatabase();
+document.getElementById('db-edit-modal').classList.remove('active');
+});
+document.getElementById('db-search').addEventListener('input', (e)=> renderDatabase(e.target.value));
+document.getElementById('db-export-btn').addEventListener('click', ()=>{
+const payload = { exportedAt: new Date().toISOString(), guests };
+const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+const url = URL.createObjectURL(blob);
+const a = document.createElement('a');
+a.href = url;
+a.download = `honore-graphic-invites-${new Date().toISOString().slice(0,10)}.json`;
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+URL.revokeObjectURL(url);
+});
+const importFileInput = document.getElementById('db-import-file');
+document.getElementById('db-import-btn').addEventListener('click', ()=> importFileInput.click());
+importFileInput.addEventListener('change', (e)=>{
+const file = e.target.files[0];
+if(!file) return;
+const reader = new FileReader();
+reader.onload = async ()=>{
+try{
+const parsed = JSON.parse(reader.result);
+const imported = Array.isArray(parsed) ? parsed : (parsed.guests || []);
+if(!Array.isArray(imported) || imported.length === 0){
+alert("Ce fichier ne contient aucun invité valide.");
+return;
+}
+if(!confirm(`Importer ${imported.length} invité(s) ? Les invités déjà présents (même identifiant) seront ignorés.`)) return;
+let added = 0;
+imported.forEach(g=>{
+if(g && g.id && !guests.find(x=>x.id===g.id)){
+guests.push(g);
+added++;
+}
+});
+await saveGuests();
+renderGuests();
+renderDatabase();
+alert(`${added} invité(s) importé(s).`);
+}catch(err){
+alert("Impossible de lire ce fichier. Vérifie qu'il s'agit bien d'une sauvegarde exportée depuis cette application.");
+}
+importFileInput.value = '';
+};
+reader.readAsText(file);
+});
+document.getElementById('db-clear-btn').addEventListener('click', async ()=>{
+if(!confirm('Effacer définitivement TOUS les invités enregistrés sur cet appareil ?')) return;
+if(!confirm('Cette action est irréversible. Confirmer la suppression totale ?')) return;
+guests = [];
+await saveGuests();
+renderGuests();
+renderDatabase();
+});
+const DEFAULT_SETTINGS = { pinHash:null, ownerCodeHash:null, partyEndAt:null, venueName:'', venueAddress:'', coupleContacts:'', eventStartAt:null, deviceId:null, eventType:'mariage', cardTheme:'or', cardStyle:'floral', cardFont:'playfair', coupleImage:null, customMessage:'' };
+let settings = Object.assign({}, DEFAULT_SETTINGS);
+let unlocked = false;
+function genDeviceId(){
+const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+let s='';
+for(let i=0;i<6;i++) s += chars[Math.floor(Math.random()*chars.length)];
+return 'APP-' + s;
+}
+async function loadSettings(){
+try{
+const val = await kvGet('settings');
+settings = val ? Object.assign({}, DEFAULT_SETTINGS, JSON.parse(val)) : Object.assign({}, DEFAULT_SETTINGS);
+}catch(e){
+settings = Object.assign({}, DEFAULT_SETTINGS);
+}
+if(!settings.deviceId){
+settings.deviceId = genDeviceId();
+saveSettings().catch(()=>{ /* pas grave, régénéré au prochain chargement si besoin */ });
+}
+}
+async function saveSettings(){
+await kvSet('settings', JSON.stringify(settings));
+}
+async function hashPin(pin){
+try{
+const enc = new TextEncoder().encode('hg-salt-' + pin);
+const buf = await crypto.subtle.digest('SHA-256', enc);
+return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}catch(e){
+return 'plain:' + pin;
+}
+}
+function isPartyEnded(){
+if(!settings.partyEndAt) return false;
+return Date.now() > new Date(settings.partyEndAt).getTime();
+}
+const OWNER_CODE_HASH_DEFAULT = '2570824a82405cdcb20757e4cae2cd6655ce3f2bfaf65b810e0296822352b7a9';
+function currentOwnerCodeHash(){
+return settings.ownerCodeHash || OWNER_CODE_HASH_DEFAULT;
+}
+let ownerCodeVerifiedThisSession = false;
+const lockOverlay = document.getElementById('lock-overlay');
+const lockOwnerCodeView = document.getElementById('lock-owner-code-view');
+const lockSetupView = document.getElementById('lock-setup-view');
+const lockEnterView = document.getElementById('lock-enter-view');
+const lockEndedBanner = document.getElementById('lock-ended-banner');
+const lockEnterSub = document.getElementById('lock-enter-sub');
+function showLockScreen(){
+lockOverlay.classList.remove('hidden');
+let partyJustEnded = false;
+if(isPartyEnded() && settings.pinHash){
+settings.pinHash = null;
+ownerCodeVerifiedThisSession = false;
+saveSettings().catch(()=>{});
+partyJustEnded = true;
+}
+if(!settings.pinHash && !ownerCodeVerifiedThisSession){
+document.getElementById('owner-code-sub').textContent = partyJustEnded
+? "La fête est terminée : l'application s'est reverrouillée et redemande l'autorisation du propriétaire."
+: "Nouvel appareil détecté. Seul le propriétaire de l'application peut l'activer ici. Entre le code d'autorisation.";
+lockOwnerCodeView.style.display = 'block';
+lockSetupView.style.display = 'none';
+lockEnterView.style.display = 'none';
+document.getElementById('owner-code-input').value='';
+document.getElementById('owner-code-error').textContent='';
+document.getElementById('owner-code-input').focus();
+}else if(!settings.pinHash){
+lockOwnerCodeView.style.display = 'none';
+lockSetupView.style.display = 'block';
+lockEnterView.style.display = 'none';
+document.getElementById('setup-pin-1').value='';
+document.getElementById('setup-pin-2').value='';
+document.getElementById('setup-pin-error').textContent='';
+document.getElementById('setup-pin-1').focus();
+}else{
+lockOwnerCodeView.style.display = 'none';
+lockSetupView.style.display = 'none';
+lockEnterView.style.display = 'block';
+document.getElementById('enter-pin-input').value='';
+document.getElementById('enter-pin-error').textContent='';
+if(isPartyEnded()){
+lockEndedBanner.style.display='block';
+const d = new Date(settings.partyEndAt);
+lockEndedBanner.textContent = `La fête est terminée depuis le ${d.toLocaleDateString('fr-FR')} à ${d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}. Entre le code pour consulter les données.`;
+lockEnterSub.textContent = "L'application s'est verrouillée automatiquement.";
+}else{
+lockEndedBanner.style.display='none';
+lockEnterSub.textContent = "Entre ton code pour accéder à l'application.";
+}
+document.getElementById('enter-pin-input').focus();
+}
+}
+document.getElementById('owner-code-btn').addEventListener('click', async ()=>{
+const val = document.getElementById('owner-code-input').value;
+const errEl = document.getElementById('owner-code-error');
+if(!val){ errEl.textContent = 'Entre le code du propriétaire.'; return; }
+const h = await hashPin(val);
+if(h === currentOwnerCodeHash()){
+ownerCodeVerifiedThisSession = true;
+showLockScreen();
+}else{
+errEl.textContent = "Code incorrect. Cet appareil n'est pas autorisé.";
+document.getElementById('owner-code-input').value='';
+}
+});
+document.getElementById('owner-code-input').addEventListener('keydown', (e)=>{
+if(e.key === 'Enter') document.getElementById('owner-code-btn').click();
+});
+function hideLockScreen(){
+unlocked = true;
+lockOverlay.classList.add('hidden');
+try{ sessionStorage.setItem('hg-unlocked','1'); }catch(e){ /* stockage de session indisponible : sans conséquence */ }
+}
+function lockNow(){
+unlocked = false;
+try{ sessionStorage.removeItem('hg-unlocked'); }catch(e){}
+stopCamera();
+showLockScreen();
+}
+document.getElementById('setup-pin-btn').addEventListener('click', async ()=>{
+const p1 = document.getElementById('setup-pin-1').value.trim();
+const p2 = document.getElementById('setup-pin-2').value.trim();
+const errEl = document.getElementById('setup-pin-error');
+if(!/^[0-9]{4,6}$/.test(p1)){ errEl.textContent = 'Le code doit contenir entre 4 et 6 chiffres.'; return; }
+if(p1 !== p2){ errEl.textContent = 'Les deux codes ne correspondent pas.'; return; }
+settings.pinHash = await hashPin(p1);
+await saveSettings();
+hideLockScreen();
+});
+document.getElementById('setup-pin-2').addEventListener('keydown', e=>{
+if(e.key==='Enter') document.getElementById('setup-pin-btn').click();
+});
+document.getElementById('enter-pin-btn').addEventListener('click', async ()=>{
+const p = document.getElementById('enter-pin-input').value.trim();
+const errEl = document.getElementById('enter-pin-error');
+const h = await hashPin(p);
+if(h === settings.pinHash){
+hideLockScreen();
+}else{
+errEl.textContent = 'Code incorrect. Réessaie.';
+document.getElementById('enter-pin-input').value='';
+document.getElementById('enter-pin-input').focus();
+}
+});
+document.getElementById('enter-pin-input').addEventListener('keydown', e=>{
+if(e.key==='Enter') document.getElementById('enter-pin-btn').click();
+});
+setInterval(()=>{
+if(unlocked && isPartyEnded()){
+lockNow();
+}
+}, 20000);
+function showRevokedScreen(message){
+document.getElementById('revoked-message').textContent = message || "Le propriétaire a désactivé l'accès à cette application sur cet appareil.";
+document.getElementById('revoked-overlay').classList.remove('hidden');
+document.getElementById('lock-overlay').classList.add('hidden');
+unlocked = false;
+}
+async function checkRevocation(){
+try{
+const controller = new AbortController();
+const timeoutId = setTimeout(()=>controller.abort(), 4000); // ne jamais bloquer l'app plus de 4s
+const res = await fetch('./revoked.json', { cache:'no-store', signal: controller.signal });
+clearTimeout(timeoutId);
+if(!res.ok) return false;
+const data = await res.json();
+if(data.globalLock){
+showRevokedScreen(data.globalLockMessage || "Le propriétaire a désactivé cette application pour tous les appareils.");
+return true;
+}
+if(Array.isArray(data.revokedDevices) && settings.deviceId && data.revokedDevices.includes(settings.deviceId)){
+showRevokedScreen("Le propriétaire a révoqué l'accès de cet appareil précis à l'application.");
+return true;
+}
+}catch(e){
+}
+return false;
+}
+setInterval(()=>{ checkRevocation(); }, 30000);
+const settingsModal = document.getElementById('settings-modal');
+document.getElementById('gear-btn').addEventListener('click', ()=>{
+const input = document.getElementById('party-end-input');
+input.value = settings.partyEndAt ? settings.partyEndAt.slice(0,16) : '';
+document.getElementById('change-pin-current').value='';
+document.getElementById('change-pin-new').value='';
+document.getElementById('change-pin-confirm').value='';
+document.getElementById('change-pin-error').textContent='';
+document.getElementById('change-pin-success').textContent='';
+document.getElementById('event-venue-input').value = settings.venueName || '';
+document.getElementById('event-address-input').value = settings.venueAddress || '';
+document.getElementById('event-contacts-input').value = settings.coupleContacts || '';
+document.getElementById('event-start-input').value = settings.eventStartAt ? settings.eventStartAt.slice(0,16) : '';
+document.getElementById('event-type-input').value = settings.eventType || 'mariage';
+document.getElementById('event-theme-input').value = settings.cardTheme || 'or';
+document.getElementById('event-style-input').value = settings.cardStyle || 'floral';
+document.getElementById('event-font-input').value = settings.cardFont || 'playfair';
+pendingCoupleImage = undefined;
+if(settings.coupleImage){
+document.getElementById('event-photo-preview').src = settings.coupleImage;
+document.getElementById('event-photo-preview-wrap').style.display = 'block';
+document.getElementById('event-photo-remove-btn').style.display = 'block';
+}else{
+document.getElementById('event-photo-preview-wrap').style.display = 'none';
+document.getElementById('event-photo-remove-btn').style.display = 'none';
+}
+document.getElementById('event-custom-message-input').value = settings.customMessage || '';
+document.getElementById('event-info-success').textContent = '';
+document.getElementById('device-id-tag').textContent = settings.deviceId || '—';
+document.getElementById('owner-space-locked').style.display = 'block';
+document.getElementById('owner-space-unlocked').style.display = 'none';
+document.getElementById('owner-space-unlock-input').value = '';
+document.getElementById('owner-space-unlock-error').textContent = '';
+document.getElementById('owner-space-new-1').value = '';
+document.getElementById('owner-space-new-2').value = '';
+document.getElementById('owner-space-change-error').textContent = '';
+document.getElementById('owner-space-change-success').textContent = '';
+settingsModal.classList.add('active');
+});
+document.getElementById('settings-modal-close').addEventListener('click', ()=> settingsModal.classList.remove('active'));
+document.getElementById('owner-space-unlock-btn').addEventListener('click', async ()=>{
+const val = document.getElementById('owner-space-unlock-input').value;
+const errEl = document.getElementById('owner-space-unlock-error');
+if(!val){ errEl.textContent = 'Entre le code du propriétaire.'; return; }
+const h = await hashPin(val);
+if(h === currentOwnerCodeHash()){
+errEl.textContent = '';
+document.getElementById('owner-space-locked').style.display = 'none';
+document.getElementById('owner-space-unlocked').style.display = 'block';
+document.getElementById('owner-space-new-1').value = '';
+document.getElementById('owner-space-new-2').value = '';
+document.getElementById('owner-space-change-error').textContent = '';
+document.getElementById('owner-space-change-success').textContent = '';
+}else{
+errEl.textContent = 'Code incorrect.';
+document.getElementById('owner-space-unlock-input').value = '';
+}
+});
+document.getElementById('owner-space-unlock-input').addEventListener('keydown', (e)=>{
+if(e.key === 'Enter') document.getElementById('owner-space-unlock-btn').click();
+});
+document.getElementById('owner-space-change-btn').addEventListener('click', async ()=>{
+const p1 = document.getElementById('owner-space-new-1').value.trim();
+const p2 = document.getElementById('owner-space-new-2').value.trim();
+const errEl = document.getElementById('owner-space-change-error');
+const okEl = document.getElementById('owner-space-change-success');
+errEl.textContent = ''; okEl.textContent = '';
+if(p1.length < 4){ errEl.textContent = 'Le code doit contenir au moins 4 caractères.'; return; }
+if(p1 !== p2){ errEl.textContent = 'Les deux codes ne correspondent pas.'; return; }
+settings.ownerCodeHash = await hashPin(p1);
+await saveSettings();
+document.getElementById('owner-space-new-1').value = '';
+document.getElementById('owner-space-new-2').value = '';
+okEl.textContent = 'Nouveau code propriétaire enregistré sur cet appareil.';
+});
+document.getElementById('owner-space-disable-device-btn').addEventListener('click', ()=>{
+if(!confirm("Désactiver l'application sur cet appareil ? Il faudra ressaisir le code propriétaire pour la réactiver ici.")) return;
+settings.pinHash = null;
+saveSettings().catch(()=>{});
+ownerCodeVerifiedThisSession = false;
+settingsModal.classList.remove('active');
+lockNow();
+});
+settingsModal.addEventListener('click', e=>{ if(e.target===settingsModal) settingsModal.classList.remove('active'); });
+document.getElementById('change-pin-btn').addEventListener('click', async ()=>{
+const cur = document.getElementById('change-pin-current').value.trim();
+const n1 = document.getElementById('change-pin-new').value.trim();
+const n2 = document.getElementById('change-pin-confirm').value.trim();
+const errEl = document.getElementById('change-pin-error');
+const okEl = document.getElementById('change-pin-success');
+errEl.textContent=''; okEl.textContent='';
+const curHash = await hashPin(cur);
+if(curHash !== settings.pinHash){ errEl.textContent = 'Le code actuel est incorrect.'; return; }
+if(!/^[0-9]{4,6}$/.test(n1)){ errEl.textContent = 'Le nouveau code doit contenir 4 à 6 chiffres.'; return; }
+if(n1 !== n2){ errEl.textContent = 'Les deux nouveaux codes ne correspondent pas.'; return; }
+settings.pinHash = await hashPin(n1);
+await saveSettings();
+okEl.textContent = 'Code mis à jour.';
+document.getElementById('change-pin-current').value='';
+document.getElementById('change-pin-new').value='';
+document.getElementById('change-pin-confirm').value='';
+});
+document.getElementById('party-end-save-btn').addEventListener('click', async ()=>{
+const val = document.getElementById('party-end-input').value;
+settings.partyEndAt = val ? new Date(val).toISOString() : null;
+await saveSettings();
+alert(val ? "Date de fin enregistrée. L'application se verrouillera automatiquement après ce moment." : "Fin automatique désactivée.");
+});
+document.getElementById('event-info-save-btn').addEventListener('click', async ()=>{
+settings.venueName = document.getElementById('event-venue-input').value.trim();
+settings.venueAddress = document.getElementById('event-address-input').value.trim();
+settings.coupleContacts = document.getElementById('event-contacts-input').value.trim();
+const startVal = document.getElementById('event-start-input').value;
+settings.eventStartAt = startVal ? new Date(startVal).toISOString() : null;
+settings.eventType = document.getElementById('event-type-input').value;
+settings.cardTheme = document.getElementById('event-theme-input').value;
+settings.cardStyle = document.getElementById('event-style-input').value;
+settings.cardFont = document.getElementById('event-font-input').value;
+settings.customMessage = document.getElementById('event-custom-message-input').value.trim();
+if(pendingCoupleImage !== undefined) settings.coupleImage = pendingCoupleImage;
+pendingCoupleImage = undefined;
+await saveSettings();
+const okEl = document.getElementById('event-info-success');
+okEl.textContent = 'Enregistré — ces infos apparaîtront sur les prochaines cartes affichées.';
+setTimeout(()=>{ okEl.textContent=''; }, 3500);
+});
+let pendingCoupleImage;
+function resizeImageToDataUrl(file, maxSize){
+return new Promise((resolve, reject)=>{
+const img = new Image();
+const reader = new FileReader();
+reader.onload = ()=>{
+img.onload = ()=>{
+let { width, height } = img;
+if(width > height){ if(width > maxSize){ height *= maxSize/width; width = maxSize; } }
+else{ if(height > maxSize){ width *= maxSize/height; height = maxSize; } }
+const canvas = document.createElement('canvas');
+canvas.width = width; canvas.height = height;
+canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+resolve(canvas.toDataURL('image/jpeg', 0.85));
+};
+img.onerror = reject;
+img.src = reader.result;
+};
+reader.onerror = reject;
+reader.readAsDataURL(file);
+});
+}
+document.getElementById('event-photo-pick-btn').addEventListener('click', ()=>{
+document.getElementById('event-photo-input').click();
+});
+document.getElementById('event-photo-input').addEventListener('change', async (e)=>{
+const file = e.target.files[0];
+e.target.value = '';
+if(!file) return;
+try{
+const dataUrl = await resizeImageToDataUrl(file, 400);
+pendingCoupleImage = dataUrl;
+document.getElementById('event-photo-preview').src = dataUrl;
+document.getElementById('event-photo-preview-wrap').style.display = 'block';
+document.getElementById('event-photo-remove-btn').style.display = 'block';
+}catch(err){
+alert("Impossible de traiter cette image, réessaie avec une autre photo.");
+}
+});
+document.getElementById('event-photo-remove-btn').addEventListener('click', ()=>{
+pendingCoupleImage = null;
+document.getElementById('event-photo-preview-wrap').style.display = 'none';
+document.getElementById('event-photo-remove-btn').style.display = 'none';
+});
+document.getElementById('event-type-input').addEventListener('change', (e)=>{
+const msgEl = document.getElementById('event-custom-message-input');
+if(!msgEl.value.trim()){
+msgEl.placeholder = EVENT_MESSAGES[e.target.value] || '';
+}
+});
+document.getElementById('event-message-reset-btn').addEventListener('click', ()=>{
+document.getElementById('event-custom-message-input').value = '';
+const type = document.getElementById('event-type-input').value;
+document.getElementById('event-custom-message-input').placeholder = EVENT_MESSAGES[type] || '';
+});
+document.getElementById('lock-now-btn').addEventListener('click', ()=>{
+settingsModal.classList.remove('active');
+lockNow();
+});
+const installBtn = document.getElementById('install-btn');
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e)=>{
+e.preventDefault();
+deferredInstallPrompt = e;
+});
+function isIos(){ return /iphone|ipad|ipod/i.test(navigator.userAgent); }
+function isStandalone(){
+return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+installBtn.addEventListener('click', async ()=>{
+if(isStandalone()){ alert("L'application est déjà installée sur cet appareil."); return; }
+if(deferredInstallPrompt){
+deferredInstallPrompt.prompt();
+await deferredInstallPrompt.userChoice;
+deferredInstallPrompt = null;
+return;
+}
+if(isIos()){
+alert("Pour installer l'application :\n\n1. Appuie sur l'icône Partager (le carré avec la flèche) en bas de Safari\n2. Choisis « Sur l'écran d'accueil »\n3. Confirme avec « Ajouter »");
+}else{
+alert("Pour installer l'application, ouvre le menu de ton navigateur (⋮ ou ...) puis choisis « Installer l'application » ou « Ajouter à l'écran d'accueil ». Fonctionne sur Android, Windows (Chrome/Edge) et macOS.");
+}
+});
+if(isStandalone()) installBtn.style.display = 'none';
+if('serviceWorker' in navigator){
+window.addEventListener('load', ()=>{
+navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+});
+}
+(async function init(){
+await loadSettings();
+let alreadyUnlockedThisSession = false;
+try{ alreadyUnlockedThisSession = sessionStorage.getItem('hg-unlocked') === '1'; }catch(e){}
+if(alreadyUnlockedThisSession && settings.pinHash && !isPartyEnded()){
+hideLockScreen();
+}else{
+showLockScreen(); // affiché tout de suite, jamais retardé par le chargement de la liste d'invités
+}
+loadGuests().catch(()=>{}); // chargée en arrière-plan ; les onglets se rafraîchiront à la consultation
+checkRevocation(); // vérifié en parallèle, en arrière-plan
+})();
+})();
+</script>
+</body>
+</html>
